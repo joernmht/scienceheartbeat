@@ -18,7 +18,19 @@ history and emits a frozen, content-hashed JSON document that is byte-for-byte
 reproducible. The dashboard is a single, dependency-free HTML file that is a
 *pure function* of that document.
 
-<!-- Try examples/demo/index.html in a browser, or build your own (below). -->
+## See it live
+
+The demo dashboard is a single self-contained HTML file. **A GitHub `blob`
+link shows its source, not the rendered page** — to actually view it, use one
+of these:
+
+- **Hosted (GitHub Pages):** <https://joernmht.github.io/scienceheartbeat/>
+  (enable once via Settings → Pages → Source: "GitHub Actions"; see
+  [`.github/workflows/pages.yml`](.github/workflows/pages.yml)).
+- **Instant preview (no setup):**
+  [open the demo via raw.githack](https://raw.githack.com/joernmht/scienceheartbeat/claude/compassionate-goldberg-vctos3/examples/demo/index.html).
+- **Locally:** download [`examples/demo/index.html`](examples/demo/index.html)
+  and open it in a browser, or run `scienceheartbeat serve` (below).
 
 ## Install
 

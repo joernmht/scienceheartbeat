@@ -1,0 +1,38 @@
+name: pages
+
+# Publish the self-contained demo dashboard to GitHub Pages.
+#
+# One-time setup: in the repository, go to Settings → Pages and set
+# "Source" to "GitHub Actions". After that this workflow deploys
+# examples/demo/ to https://<owner>.github.io/scienceheartbeat/ on every push
+# to the default branch (or run it manually from the Actions tab).
+
+on:
+  push:
+    branches: ["main", "claude/compassionate-goldberg-vctos3"]
+    paths: ["examples/demo/**", ".github/workflows/pages.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: examples/demo
+      - id: deployment
+        uses: actions/deploy-pages@v4
