@@ -1,0 +1,32 @@
+name: Feature request
+description: Suggest an improvement or a new node/edge kind.
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: Describe the motivation, not just the solution.
+    validations: { required: true }
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+    validations: { required: true }
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - scan (git history)
+        - classify (change kinds / palette)
+        - graph (nodes / edges / layout)
+        - dashboard (rendering)
+        - roadmap node (server / loop / telegram / claude)
+        - other
+    validations: { required: true }
+  - type: textarea
+    id: determinism
+    attributes:
+      label: Determinism note
+      description: How does this keep the emitted document reproducible?

@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/joernmht/scienceheartbeat/schema/heartbeat.schema.json",
+  "title": "HeartbeatDocument",
+  "description": "Deterministic heartbeat document consumed by the science heartbeat dashboard. Mirrors scienceheartbeat.core.model.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "palette_version",
+    "classifier_version",
+    "layout_version",
+    "sources",
+    "nodes",
+    "edges",
+    "pulses",
+    "palette",
+    "t_min",
+    "t_max",
+    "content_hash"
+  ],
+  "properties": {
+    "schema_version": { "type": "string" },
+    "palette_version": { "type": "string" },
+    "classifier_version": { "type": "string" },
+    "layout_version": { "type": "string" },
+    "content_hash": { "type": "string" },
+    "t_min": { "type": "integer" },
+    "t_max": { "type": "integer" },
+    "palette": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "sources": { "type": "array", "items": { "$ref": "#/$defs/source" } },
+    "nodes": { "type": "array", "items": { "$ref": "#/$defs/node" } },
+    "edges": { "type": "array", "items": { "$ref": "#/$defs/edge" } },
+    "pulses": { "type": "array", "items": { "$ref": "#/$defs/pulse" } }
+  },
+  "$defs": {
+    "changeKind": {
+      "type": "string",
+      "enum": ["code", "tests", "docs", "build", "deps", "config", "data", "assets", "other"]
+    },
+    "nodeKind": {
+      "type": "string",
+      "enum": ["repo", "branch", "committer", "server", "agent", "bot", "loop"]
+    },
+    "edgeKind": {
+      "type": "string",
+      "enum": ["authored", "branch_of", "accessed", "runs_on", "notifies"]
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "path", "branch", "head", "commits"],
+      "properties": {
+        "name": { "type": "string" },
+        "path": { "type": "string" },
+        "branch": { "type": "string" },
+        "head": { "type": "string" },
+        "commits": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "label", "parent", "x", "y"],
+      "properties": {
+        "id": { "type": "string" },
+        "kind": { "$ref": "#/$defs/nodeKind" },
+        "label": { "type": "string" },
+        "parent": { "type": ["string", "null"] },
+        "x": { "type": "number" },
+        "y": { "type": "number" }
+      }
+    },
+    "edge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "source", "target", "label"],
+      "properties": {
+        "id": { "type": "string" },
+        "kind": { "$ref": "#/$defs/edgeKind" },
+        "source": { "type": "string" },
+        "target": { "type": "string" },
+        "label": { "type": ["string", "null"] }
+      }
+    },
+    "kindCount": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "files"],
+      "properties": {
+        "kind": { "$ref": "#/$defs/changeKind" },
+        "files": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "pulse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "t", "node", "path", "kind", "color", "intensity",
+        "source", "source_id", "repo", "branch", "title", "ref",
+        "insertions", "deletions", "files_changed", "kinds"
+      ],
+      "properties": {
+        "id": { "type": "string" },
+        "t": { "type": "integer" },
+        "node": { "type": "string" },
+        "path": { "type": "array", "items": { "type": "string" } },
+        "kind": { "$ref": "#/$defs/changeKind" },
+        "color": { "type": "string" },
+        "intensity": { "type": "number", "minimum": 0, "maximum": 1 },
+        "source": { "type": "string" },
+        "source_id": { "type": "string" },
+        "repo": { "type": "string" },
+        "branch": { "type": "string" },
+        "title": { "type": "string" },
+        "ref": { "type": "string" },
+        "insertions": { "type": "integer", "minimum": 0 },
+        "deletions": { "type": "integer", "minimum": 0 },
+        "files_changed": { "type": "integer", "minimum": 0 },
+        "kinds": { "type": "array", "items": { "$ref": "#/$defs/kindCount" } }
+      }
+    }
+  }
+}

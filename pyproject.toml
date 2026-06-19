@@ -1,0 +1,113 @@
+[build-system]
+requires = ["hatchling>=1.21"]
+build-backend = "hatchling.build"
+
+[project]
+name = "scienceheartbeat"
+version = "0.1.0"
+description = "Deterministic heartbeat dashboard that visualises repository changes as a living graph."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+authors = [{ name = "scienceheartbeat contributors" }]
+keywords = ["git", "dashboard", "visualization", "graph", "heartbeat", "observability"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Version Control :: Git",
+    "Topic :: Scientific/Engineering :: Visualization",
+]
+dependencies = [
+    "pydantic>=2.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=4.0",
+    "ruff>=0.15.12,<0.16",
+    "mypy>=1.10",
+    "jsonschema>=4.0",
+    "pre-commit>=3.6",
+]
+docs = [
+    "mkdocs-material>=9.5",
+]
+
+[project.scripts]
+scienceheartbeat = "scienceheartbeat.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/joernmht/scienceheartbeat"
+Documentation = "https://github.com/joernmht/scienceheartbeat#readme"
+Issues = "https://github.com/joernmht/scienceheartbeat/issues"
+Source = "https://github.com/joernmht/scienceheartbeat"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/scienceheartbeat"]
+# Non-Python dashboard assets (HTML/CSS/JS) ship inside the package so the
+# self-contained dashboard can be rendered from an installed wheel.
+artifacts = ["src/scienceheartbeat/dashboard/assets/*"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "src/scienceheartbeat",
+    "schema",
+    "docs",
+    "tests",
+    "examples",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md",
+    "CITATION.cff",
+    "pyproject.toml",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "RUF"]
+ignore = ["E501", "B008"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["B011"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["scienceheartbeat"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+files = ["src/scienceheartbeat"]
+plugins = ["pydantic.mypy"]
+
+[[tool.mypy.overrides]]
+module = ["jsonschema.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+addopts = "-ra -q --strict-markers"
+testpaths = ["tests"]
+
+[tool.coverage.run]
+source = ["src/scienceheartbeat"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
+exclude_lines = [
+    "pragma: no cover",
+    "raise NotImplementedError",
+    "if TYPE_CHECKING:",
+]

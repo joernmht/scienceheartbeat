@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Discussion
+    url: https://github.com/joernmht/scienceheartbeat/discussions
+    about: For open-ended questions and design discussions.

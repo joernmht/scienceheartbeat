@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>science heartbeat</title>
+<style>/*__STYLE__*/</style>
+</head>
+<body>
+<canvas id="stage"></canvas>
+
+<header id="topbar">
+  <div class="brand"><span class="dot"></span> science<b>heartbeat</b></div>
+  <div id="clock" class="clock"></div>
+</header>
+
+<aside id="legend" class="panel"></aside>
+<section id="nowplaying" class="panel idle"></section>
+
+<footer id="timeline">
+  <div class="controls">
+    <button id="playpause" aria-label="Play / pause">▶</button>
+    <div class="speeds" id="speeds"></div>
+  </div>
+  <canvas id="ecg"></canvas>
+  <input id="scrub" type="range" min="0" max="1000" value="0" step="1" aria-label="Timeline" />
+</footer>
+
+<div id="tooltip" class="tooltip" hidden></div>
+<div id="empty"></div>
+
+<script id="hb-data" type="application/json">__HEARTBEAT_DATA__</script>
+<script>/*__APP__*/</script>
+</body>
+</html>

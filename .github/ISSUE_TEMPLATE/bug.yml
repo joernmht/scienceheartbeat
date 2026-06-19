@@ -1,0 +1,34 @@
+name: Bug report
+description: Something is wrong with scienceheartbeat.
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: A clear description of the problem.
+    validations: { required: true }
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction
+      description: Minimal steps to reproduce. Include the command you ran.
+      render: shell
+    validations: { required: true }
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations: { required: true }
+  - type: input
+    id: version
+    attributes:
+      label: scienceheartbeat version
+      placeholder: "0.1.0"
+    validations: { required: true }
+  - type: input
+    id: python
+    attributes:
+      label: Python version
+      placeholder: "3.12.3"
+    validations: { required: true }

@@ -1,0 +1,23 @@
+__pycache__/
+*.egg-info/
+dist/
+build/
+.eggs/
+*.pyc
+.venv/
+venv/
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+site/
+*.swp
+.DS_Store
+.idea/
+.vscode/
+
+# Default CLI output directory.
+heartbeat-dashboard/

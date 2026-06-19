@@ -1,0 +1,2206 @@
+{
+  "classifier_version": "1",
+  "content_hash": "bdbcc55177541d0b05b9603dfdc18054f73d86063807f933cf3fd4defb46ef9e",
+  "edges": [
+    {
+      "id": "edge:authored:0bf801fb4e749cde",
+      "kind": "authored",
+      "label": null,
+      "source": "committer:b0f029c27377",
+      "target": "branch:borealis:develop"
+    },
+    {
+      "id": "edge:authored:124ed54fcc5cdbb7",
+      "kind": "authored",
+      "label": null,
+      "source": "committer:3ca93ad87e0b",
+      "target": "branch:borealis:develop"
+    },
+    {
+      "id": "edge:authored:46136c1c800684e3",
+      "kind": "authored",
+      "label": null,
+      "source": "committer:b0f029c27377",
+      "target": "branch:aurora:main"
+    },
+    {
+      "id": "edge:authored:8c77cfcd282cfc92",
+      "kind": "authored",
+      "label": null,
+      "source": "committer:a460e37bf4d8",
+      "target": "branch:aurora:main"
+    },
+    {
+      "id": "edge:authored:d6e035967238d266",
+      "kind": "authored",
+      "label": null,
+      "source": "committer:a460e37bf4d8",
+      "target": "branch:borealis:develop"
+    },
+    {
+      "id": "edge:authored:f244b180ac7a30e6",
+      "kind": "authored",
+      "label": null,
+      "source": "committer:3ca93ad87e0b",
+      "target": "branch:aurora:main"
+    },
+    {
+      "id": "edge:branch_of:57806a81c5008cb8",
+      "kind": "branch_of",
+      "label": null,
+      "source": "branch:borealis:develop",
+      "target": "repo:borealis"
+    },
+    {
+      "id": "edge:branch_of:86c24c39a9a504bc",
+      "kind": "branch_of",
+      "label": null,
+      "source": "branch:aurora:main",
+      "target": "repo:aurora"
+    }
+  ],
+  "layout_version": "1",
+  "nodes": [
+    {
+      "id": "branch:aurora:main",
+      "kind": "branch",
+      "label": "main",
+      "parent": "repo:aurora",
+      "x": 1.4083438190194563e-14,
+      "y": -325.0
+    },
+    {
+      "id": "branch:borealis:develop",
+      "kind": "branch",
+      "label": "develop",
+      "parent": "repo:borealis",
+      "x": 1.4083438190194563e-14,
+      "y": 135.0
+    },
+    {
+      "id": "committer:3ca93ad87e0b",
+      "kind": "committer",
+      "label": "Ada Lovelace",
+      "parent": null,
+      "x": 2.87791997799628e-14,
+      "y": -470.0
+    },
+    {
+      "id": "committer:a460e37bf4d8",
+      "kind": "committer",
+      "label": "Bob Bits",
+      "parent": null,
+      "x": 407.0319397786862,
+      "y": 234.99999999999991
+    },
+    {
+      "id": "committer:b0f029c27377",
+      "kind": "committer",
+      "label": "Carol Compiler",
+      "parent": null,
+      "x": -407.0319397786861,
+      "y": 235.00000000000017
+    },
+    {
+      "id": "repo:aurora",
+      "kind": "repo",
+      "label": "aurora",
+      "parent": null,
+      "x": 1.4083438190194563e-14,
+      "y": -230.0
+    },
+    {
+      "id": "repo:borealis",
+      "kind": "repo",
+      "label": "borealis",
+      "parent": null,
+      "x": 1.4083438190194563e-14,
+      "y": 230.0
+    }
+  ],
+  "palette": {
+    "assets": "#c3e88d",
+    "build": "#ff8fa3",
+    "code": "#4fd1ff",
+    "config": "#c792ea",
+    "data": "#82aaff",
+    "deps": "#f78c6c",
+    "docs": "#ffd166",
+    "other": "#9fb0c0",
+    "tests": "#7cffb2"
+  },
+  "palette_version": "1",
+  "pulses": [
+    {
+      "branch": "branch:aurora:main",
+      "color": "#4fd1ff",
+      "deletions": 95,
+      "files_changed": 2,
+      "id": "pulse:aurora:4ef9149d4954",
+      "insertions": 283,
+      "intensity": 0.8118,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 1,
+          "kind": "code"
+        },
+        {
+          "files": 1,
+          "kind": "data"
+        }
+      ],
+      "node": "branch:aurora:main",
+      "path": [
+        "committer:a460e37bf4d8",
+        "branch:aurora:main",
+        "repo:aurora"
+      ],
+      "ref": "4ef9149d4954",
+      "repo": "repo:aurora",
+      "source": "Bob Bits",
+      "source_id": "committer:a460e37bf4d8",
+      "t": 1716081029,
+      "title": "test: cover metrics"
+    },
+    {
+      "branch": "branch:borealis:develop",
+      "color": "#4fd1ff",
+      "deletions": 104,
+      "files_changed": 3,
+      "id": "pulse:borealis:d67444ec4b9b",
+      "insertions": 197,
+      "intensity": 0.7808,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 2,
+          "kind": "code"
+        },
+        {
+          "files": 1,
+          "kind": "tests"
+        }
+      ],
+      "node": "branch:borealis:develop",
+      "path": [
+        "committer:b0f029c27377",
+        "branch:borealis:develop",
+        "repo:borealis"
+      ],
+      "ref": "d67444ec4b9b",
+      "repo": "repo:borealis",
+      "source": "Carol Compiler",
+      "source_id": "committer:b0f029c27377",
+      "t": 1716142974,
+      "title": "chore: bump loader"
+    },
+    {
+      "branch": "branch:aurora:main",
+      "color": "#4fd1ff",
+      "deletions": 27,
+      "files_changed": 2,
+      "id": "pulse:aurora:e06ecbe830d1",
+      "insertions": 66,
+      "intensity": 0.6212,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 1,
+          "kind": "code"
+        },
+        {
+          "files": 1,
+          "kind": "build"
+        }
+      ],
+      "node": "branch:aurora:main",
+      "path": [
+        "committer:a460e37bf4d8",
+        "branch:aurora:main",
+        "repo:aurora"
+      ],
+      "ref": "e06ecbe830d1",
+      "repo": "repo:aurora",
+      "source": "Bob Bits",
+      "source_id": "committer:a460e37bf4d8",
+      "t": 1716221414,
+      "title": "test: cover export"
+    },
+    {
+      "branch": "branch:borealis:develop",
+      "color": "#4fd1ff",
+      "deletions": 22,
+      "files_changed": 2,
+      "id": "pulse:borealis:b2cd46346876",
+      "insertions": 55,
+      "intensity": 0.5957,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 1,
+          "kind": "code"
+        },
+        {
+          "files": 1,
+          "kind": "tests"
+        }
+      ],
+      "node": "branch:borealis:develop",
+      "path": [
+        "committer:3ca93ad87e0b",
+        "branch:borealis:develop",
+        "repo:borealis"
+      ],
+      "ref": "b2cd46346876",
+      "repo": "repo:borealis",
+      "source": "Ada Lovelace",
+      "source_id": "committer:3ca93ad87e0b",
+      "t": 1716275352,
+      "title": "refactor: simplify cache"
+    },
+    {
+      "branch": "branch:borealis:develop",
+      "color": "#4fd1ff",
+      "deletions": 84,
+      "files_changed": 4,
+      "id": "pulse:borealis:c99bd3268885",
+      "insertions": 145,
+      "intensity": 0.7435,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 2,
+          "kind": "code"
+        },
+        {
+          "files": 2,
+          "kind": "build"
+        }
+      ],
+      "node": "branch:borealis:develop",
+      "path": [
+        "committer:b0f029c27377",
+        "branch:borealis:develop",
+        "repo:borealis"
+      ],
+      "ref": "c99bd3268885",
+      "repo": "repo:borealis",
+      "source": "Carol Compiler",
+      "source_id": "committer:b0f029c27377",
+      "t": 1716350681,
+      "title": "feat: auth"
+    },
+    {
+      "branch": "branch:aurora:main",
+      "color": "#82aaff",
+      "deletions": 109,
+      "files_changed": 1,
+      "id": "pulse:aurora:ffe8f30e97c7",
+      "insertions": 86,
+      "intensity": 0.7217,
+      "kind": "data",
+      "kinds": [
+        {
+          "files": 1,
+          "kind": "data"
+        }
+      ],
+      "node": "branch:aurora:main",
+      "path": [
+        "committer:3ca93ad87e0b",
+        "branch:aurora:main",
+        "repo:aurora"
+      ],
+      "ref": "ffe8f30e97c7",
+      "repo": "repo:aurora",
+      "source": "Ada Lovelace",
+      "source_id": "committer:3ca93ad87e0b",
+      "t": 1716433331,
+      "title": "feat: graph"
+    },
+    {
+      "branch": "branch:borealis:develop",
+      "color": "#4fd1ff",
+      "deletions": 35,
+      "files_changed": 2,
+      "id": "pulse:borealis:f1ce5c393d32",
+      "insertions": 48,
+      "intensity": 0.6058,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 1,
+          "kind": "code"
+        },
+        {
+          "files": 1,
+          "kind": "build"
+        }
+      ],
+      "node": "branch:borealis:develop",
+      "path": [
+        "committer:3ca93ad87e0b",
+        "branch:borealis:develop",
+        "repo:borealis"
+      ],
+      "ref": "f1ce5c393d32",
+      "repo": "repo:borealis",
+      "source": "Ada Lovelace",
+      "source_id": "committer:3ca93ad87e0b",
+      "t": 1716528740,
+      "title": "docs: explain parser"
+    },
+    {
+      "branch": "branch:borealis:develop",
+      "color": "#7cffb2",
+      "deletions": 36,
+      "files_changed": 4,
+      "id": "pulse:borealis:f186d61fefa9",
+      "insertions": 176,
+      "intensity": 0.733,
+      "kind": "tests",
+      "kinds": [
+        {
+          "files": 1,
+          "kind": "code"
+        },
+        {
+          "files": 2,
+          "kind": "tests"
+        },
+        {
+          "files": 1,
+          "kind": "assets"
+        }
+      ],
+      "node": "branch:borealis:develop",
+      "path": [
+        "committer:a460e37bf4d8",
+        "branch:borealis:develop",
+        "repo:borealis"
+      ],
+      "ref": "f186d61fefa9",
+      "repo": "repo:borealis",
+      "source": "Bob Bits",
+      "source_id": "committer:a460e37bf4d8",
+      "t": 1716602290,
+      "title": "fix: handle parser edge case"
+    },
+    {
+      "branch": "branch:aurora:main",
+      "color": "#4fd1ff",
+      "deletions": 15,
+      "files_changed": 2,
+      "id": "pulse:aurora:b3fbae81ee1b",
+      "insertions": 82,
+      "intensity": 0.6269,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 1,
+          "kind": "code"
+        },
+        {
+          "files": 1,
+          "kind": "docs"
+        }
+      ],
+      "node": "branch:aurora:main",
+      "path": [
+        "committer:3ca93ad87e0b",
+        "branch:aurora:main",
+        "repo:aurora"
+      ],
+      "ref": "b3fbae81ee1b",
+      "repo": "repo:aurora",
+      "source": "Ada Lovelace",
+      "source_id": "committer:3ca93ad87e0b",
+      "t": 1716628167,
+      "title": "feat: loader"
+    },
+    {
+      "branch": "branch:borealis:develop",
+      "color": "#4fd1ff",
+      "deletions": 53,
+      "files_changed": 3,
+      "id": "pulse:borealis:fbc6354aeff2",
+      "insertions": 44,
+      "intensity": 0.6269,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 1,
+          "kind": "code"
+        },
+        {
+          "files": 1,
+          "kind": "docs"
+        },
+        {
+          "files": 1,
+          "kind": "config"
+        }
+      ],
+      "node": "branch:borealis:develop",
+      "path": [
+        "committer:b0f029c27377",
+        "branch:borealis:develop",
+        "repo:borealis"
+      ],
+      "ref": "fbc6354aeff2",
+      "repo": "repo:borealis",
+      "source": "Carol Compiler",
+      "source_id": "committer:b0f029c27377",
+      "t": 1716666289,
+      "title": "docs: explain scheduler"
+    },
+    {
+      "branch": "branch:aurora:main",
+      "color": "#4fd1ff",
+      "deletions": 8,
+      "files_changed": 2,
+      "id": "pulse:aurora:2e70431bccd8",
+      "insertions": 78,
+      "intensity": 0.6106,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 1,
+          "kind": "code"
+        },
+        {
+          "files": 1,
+          "kind": "assets"
+        }
+      ],
+      "node": "branch:aurora:main",
+      "path": [
+        "committer:b0f029c27377",
+        "branch:aurora:main",
+        "repo:aurora"
+      ],
+      "ref": "2e70431bccd8",
+      "repo": "repo:aurora",
+      "source": "Carol Compiler",
+      "source_id": "committer:b0f029c27377",
+      "t": 1716777868,
+      "title": "fix: handle auth edge case"
+    },
+    {
+      "branch": "branch:borealis:develop",
+      "color": "#4fd1ff",
+      "deletions": 81,
+      "files_changed": 3,
+      "id": "pulse:borealis:686ff7fb10cd",
+      "insertions": 207,
+      "intensity": 0.7747,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 2,
+          "kind": "code"
+        },
+        {
+          "files": 1,
+          "kind": "tests"
+        }
+      ],
+      "node": "branch:borealis:develop",
+      "path": [
+        "committer:3ca93ad87e0b",
+        "branch:borealis:develop",
+        "repo:borealis"
+      ],
+      "ref": "686ff7fb10cd",
+      "repo": "repo:borealis",
+      "source": "Ada Lovelace",
+      "source_id": "committer:3ca93ad87e0b",
+      "t": 1716883369,
+      "title": "test: cover metrics"
+    },
+    {
+      "branch": "branch:aurora:main",
+      "color": "#4fd1ff",
+      "deletions": 41,
+      "files_changed": 3,
+      "id": "pulse:aurora:fdf78a8ca42a",
+      "insertions": 94,
+      "intensity": 0.6717,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 1,
+          "kind": "code"
+        },
+        {
+          "files": 1,
+          "kind": "docs"
+        },
+        {
+          "files": 1,
+          "kind": "build"
+        }
+      ],
+      "node": "branch:aurora:main",
+      "path": [
+        "committer:b0f029c27377",
+        "branch:aurora:main",
+        "repo:aurora"
+      ],
+      "ref": "fdf78a8ca42a",
+      "repo": "repo:aurora",
+      "source": "Carol Compiler",
+      "source_id": "committer:b0f029c27377",
+      "t": 1716999823,
+      "title": "refactor: simplify parser"
+    },
+    {
+      "branch": "branch:borealis:develop",
+      "color": "#4fd1ff",
+      "deletions": 29,
+      "files_changed": 1,
+      "id": "pulse:borealis:5788f9c15114",
+      "insertions": 93,
+      "intensity": 0.658,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 1,
+          "kind": "code"
+        }
+      ],
+      "node": "branch:borealis:develop",
+      "path": [
+        "committer:a460e37bf4d8",
+        "branch:borealis:develop",
+        "repo:borealis"
+      ],
+      "ref": "5788f9c15114",
+      "repo": "repo:borealis",
+      "source": "Bob Bits",
+      "source_id": "committer:a460e37bf4d8",
+      "t": 1717035341,
+      "title": "docs: explain auth"
+    },
+    {
+      "branch": "branch:aurora:main",
+      "color": "#4fd1ff",
+      "deletions": 35,
+      "files_changed": 1,
+      "id": "pulse:aurora:6e1b7ba47e73",
+      "insertions": 48,
+      "intensity": 0.6058,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 1,
+          "kind": "code"
+        }
+      ],
+      "node": "branch:aurora:main",
+      "path": [
+        "committer:3ca93ad87e0b",
+        "branch:aurora:main",
+        "repo:aurora"
+      ],
+      "ref": "6e1b7ba47e73",
+      "repo": "repo:aurora",
+      "source": "Ada Lovelace",
+      "source_id": "committer:3ca93ad87e0b",
+      "t": 1717111399,
+      "title": "test: cover graph"
+    },
+    {
+      "branch": "branch:borealis:develop",
+      "color": "#4fd1ff",
+      "deletions": 33,
+      "files_changed": 2,
+      "id": "pulse:borealis:b45b09a45a7e",
+      "insertions": 95,
+      "intensity": 0.6645,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 1,
+          "kind": "code"
+        },
+        {
+          "files": 1,
+          "kind": "docs"
+        }
+      ],
+      "node": "branch:borealis:develop",
+      "path": [
+        "committer:b0f029c27377",
+        "branch:borealis:develop",
+        "repo:borealis"
+      ],
+      "ref": "b45b09a45a7e",
+      "repo": "repo:borealis",
+      "source": "Carol Compiler",
+      "source_id": "committer:b0f029c27377",
+      "t": 1717154712,
+      "title": "feat: loader"
+    },
+    {
+      "branch": "branch:aurora:main",
+      "color": "#4fd1ff",
+      "deletions": 50,
+      "files_changed": 1,
+      "id": "pulse:aurora:aaae6b20cb0e",
+      "insertions": 96,
+      "intensity": 0.6823,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 1,
+          "kind": "code"
+        }
+      ],
+      "node": "branch:aurora:main",
+      "path": [
+        "committer:b0f029c27377",
+        "branch:aurora:main",
+        "repo:aurora"
+      ],
+      "ref": "aaae6b20cb0e",
+      "repo": "repo:aurora",
+      "source": "Carol Compiler",
+      "source_id": "committer:b0f029c27377",
+      "t": 1717178939,
+      "title": "refactor: simplify metrics"
+    },
+    {
+      "branch": "branch:aurora:main",
+      "color": "#4fd1ff",
+      "deletions": 56,
+      "files_changed": 3,
+      "id": "pulse:aurora:423be623ac69",
+      "insertions": 196,
+      "intensity": 0.7566,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 2,
+          "kind": "code"
+        },
+        {
+          "files": 1,
+          "kind": "config"
+        }
+      ],
+      "node": "branch:aurora:main",
+      "path": [
+        "committer:3ca93ad87e0b",
+        "branch:aurora:main",
+        "repo:aurora"
+      ],
+      "ref": "423be623ac69",
+      "repo": "repo:aurora",
+      "source": "Ada Lovelace",
+      "source_id": "committer:3ca93ad87e0b",
+      "t": 1717231074,
+      "title": "docs: explain metrics"
+    },
+    {
+      "branch": "branch:borealis:develop",
+      "color": "#4fd1ff",
+      "deletions": 10,
+      "files_changed": 1,
+      "id": "pulse:borealis:7108e7bfbc1b",
+      "insertions": 86,
+      "intensity": 0.6255,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 1,
+          "kind": "code"
+        }
+      ],
+      "node": "branch:borealis:develop",
+      "path": [
+        "committer:3ca93ad87e0b",
+        "branch:borealis:develop",
+        "repo:borealis"
+      ],
+      "ref": "7108e7bfbc1b",
+      "repo": "repo:borealis",
+      "source": "Ada Lovelace",
+      "source_id": "committer:3ca93ad87e0b",
+      "t": 1717335317,
+      "title": "feat: scheduler"
+    },
+    {
+      "branch": "branch:aurora:main",
+      "color": "#4fd1ff",
+      "deletions": 47,
+      "files_changed": 4,
+      "id": "pulse:aurora:16c10e407b90",
+      "insertions": 361,
+      "intensity": 0.8222,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 2,
+          "kind": "code"
+        },
+        {
+          "files": 1,
+          "kind": "docs"
+        },
+        {
+          "files": 1,
+          "kind": "data"
+        }
+      ],
+      "node": "branch:aurora:main",
+      "path": [
+        "committer:a460e37bf4d8",
+        "branch:aurora:main",
+        "repo:aurora"
+      ],
+      "ref": "16c10e407b90",
+      "repo": "repo:aurora",
+      "source": "Bob Bits",
+      "source_id": "committer:a460e37bf4d8",
+      "t": 1717390898,
+      "title": "docs: explain cache"
+    },
+    {
+      "branch": "branch:aurora:main",
+      "color": "#7cffb2",
+      "deletions": 23,
+      "files_changed": 4,
+      "id": "pulse:aurora:3f4fb8d5dea0",
+      "insertions": 134,
+      "intensity": 0.6922,
+      "kind": "tests",
+      "kinds": [
+        {
+          "files": 1,
+          "kind": "code"
+        },
+        {
+          "files": 2,
+          "kind": "tests"
+        },
+        {
+          "files": 1,
+          "kind": "config"
+        }
+      ],
+      "node": "branch:aurora:main",
+      "path": [
+        "committer:3ca93ad87e0b",
+        "branch:aurora:main",
+        "repo:aurora"
+      ],
+      "ref": "3f4fb8d5dea0",
+      "repo": "repo:aurora",
+      "source": "Ada Lovelace",
+      "source_id": "committer:3ca93ad87e0b",
+      "t": 1717457579,
+      "title": "test: cover loader"
+    },
+    {
+      "branch": "branch:borealis:develop",
+      "color": "#7cffb2",
+      "deletions": 29,
+      "files_changed": 2,
+      "id": "pulse:borealis:87cb37596566",
+      "insertions": 100,
+      "intensity": 0.6655,
+      "kind": "tests",
+      "kinds": [
+        {
+          "files": 2,
+          "kind": "tests"
+        }
+      ],
+      "node": "branch:borealis:develop",
+      "path": [
+        "committer:a460e37bf4d8",
+        "branch:borealis:develop",
+        "repo:borealis"
+      ],
+      "ref": "87cb37596566",
+      "repo": "repo:borealis",
+      "source": "Bob Bits",
+      "source_id": "committer:a460e37bf4d8",
+      "t": 1717566287,
+      "title": "chore: bump graph"
+    },
+    {
+      "branch": "branch:aurora:main",
+      "color": "#4fd1ff",
+      "deletions": 26,
+      "files_changed": 2,
+      "id": "pulse:aurora:f76b7513769a",
+      "insertions": 79,
+      "intensity": 0.6376,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 1,
+          "kind": "code"
+        },
+        {
+          "files": 1,
+          "kind": "docs"
+        }
+      ],
+      "node": "branch:aurora:main",
+      "path": [
+        "committer:a460e37bf4d8",
+        "branch:aurora:main",
+        "repo:aurora"
+      ],
+      "ref": "f76b7513769a",
+      "repo": "repo:aurora",
+      "source": "Bob Bits",
+      "source_id": "committer:a460e37bf4d8",
+      "t": 1717693209,
+      "title": "docs: explain export"
+    },
+    {
+      "branch": "branch:borealis:develop",
+      "color": "#ffd166",
+      "deletions": 35,
+      "files_changed": 3,
+      "id": "pulse:borealis:1ffff15248f9",
+      "insertions": 106,
+      "intensity": 0.6776,
+      "kind": "docs",
+      "kinds": [
+        {
+          "files": 1,
+          "kind": "code"
+        },
+        {
+          "files": 2,
+          "kind": "docs"
+        }
+      ],
+      "node": "branch:borealis:develop",
+      "path": [
+        "committer:a460e37bf4d8",
+        "branch:borealis:develop",
+        "repo:borealis"
+      ],
+      "ref": "1ffff15248f9",
+      "repo": "repo:borealis",
+      "source": "Bob Bits",
+      "source_id": "committer:a460e37bf4d8",
+      "t": 1717735192,
+      "title": "fix: handle cache edge case"
+    },
+    {
+      "branch": "branch:aurora:main",
+      "color": "#4fd1ff",
+      "deletions": 9,
+      "files_changed": 2,
+      "id": "pulse:aurora:7d7b60e2aa07",
+      "insertions": 182,
+      "intensity": 0.7188,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 2,
+          "kind": "code"
+        }
+      ],
+      "node": "branch:aurora:main",
+      "path": [
+        "committer:b0f029c27377",
+        "branch:aurora:main",
+        "repo:aurora"
+      ],
+      "ref": "7d7b60e2aa07",
+      "repo": "repo:aurora",
+      "source": "Carol Compiler",
+      "source_id": "committer:b0f029c27377",
+      "t": 1717739276,
+      "title": "test: cover auth"
+    },
+    {
+      "branch": "branch:aurora:main",
+      "color": "#7cffb2",
+      "deletions": 0,
+      "files_changed": 1,
+      "id": "pulse:aurora:1bf55e381a05",
+      "insertions": 49,
+      "intensity": 0.5349,
+      "kind": "tests",
+      "kinds": [
+        {
+          "files": 1,
+          "kind": "tests"
+        }
+      ],
+      "node": "branch:aurora:main",
+      "path": [
+        "committer:b0f029c27377",
+        "branch:aurora:main",
+        "repo:aurora"
+      ],
+      "ref": "1bf55e381a05",
+      "repo": "repo:aurora",
+      "source": "Carol Compiler",
+      "source_id": "committer:b0f029c27377",
+      "t": 1717819509,
+      "title": "refactor: simplify graph"
+    },
+    {
+      "branch": "branch:aurora:main",
+      "color": "#4fd1ff",
+      "deletions": 113,
+      "files_changed": 3,
+      "id": "pulse:aurora:305887d50287",
+      "insertions": 324,
+      "intensity": 0.8316,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 1,
+          "kind": "code"
+        },
+        {
+          "files": 1,
+          "kind": "docs"
+        },
+        {
+          "files": 1,
+          "kind": "data"
+        }
+      ],
+      "node": "branch:aurora:main",
+      "path": [
+        "committer:a460e37bf4d8",
+        "branch:aurora:main",
+        "repo:aurora"
+      ],
+      "ref": "305887d50287",
+      "repo": "repo:aurora",
+      "source": "Bob Bits",
+      "source_id": "committer:a460e37bf4d8",
+      "t": 1717976447,
+      "title": "refactor: simplify loader"
+    },
+    {
+      "branch": "branch:borealis:develop",
+      "color": "#7cffb2",
+      "deletions": 24,
+      "files_changed": 2,
+      "id": "pulse:borealis:b35c271ebf7f",
+      "insertions": 59,
+      "intensity": 0.6058,
+      "kind": "tests",
+      "kinds": [
+        {
+          "files": 2,
+          "kind": "tests"
+        }
+      ],
+      "node": "branch:borealis:develop",
+      "path": [
+        "committer:3ca93ad87e0b",
+        "branch:borealis:develop",
+        "repo:borealis"
+      ],
+      "ref": "b35c271ebf7f",
+      "repo": "repo:borealis",
+      "source": "Ada Lovelace",
+      "source_id": "committer:3ca93ad87e0b",
+      "t": 1717982002,
+      "title": "feat: auth"
+    },
+    {
+      "branch": "branch:borealis:develop",
+      "color": "#4fd1ff",
+      "deletions": 33,
+      "files_changed": 3,
+      "id": "pulse:borealis:9a327a7d3bf9",
+      "insertions": 278,
+      "intensity": 0.7852,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 1,
+          "kind": "code"
+        },
+        {
+          "files": 1,
+          "kind": "tests"
+        },
+        {
+          "files": 1,
+          "kind": "data"
+        }
+      ],
+      "node": "branch:borealis:develop",
+      "path": [
+        "committer:b0f029c27377",
+        "branch:borealis:develop",
+        "repo:borealis"
+      ],
+      "ref": "9a327a7d3bf9",
+      "repo": "repo:borealis",
+      "source": "Carol Compiler",
+      "source_id": "committer:b0f029c27377",
+      "t": 1718155912,
+      "title": "chore: bump metrics"
+    },
+    {
+      "branch": "branch:aurora:main",
+      "color": "#4fd1ff",
+      "deletions": 29,
+      "files_changed": 4,
+      "id": "pulse:aurora:c4ebd836dff7",
+      "insertions": 341,
+      "intensity": 0.8089,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 2,
+          "kind": "code"
+        },
+        {
+          "files": 1,
+          "kind": "config"
+        },
+        {
+          "files": 1,
+          "kind": "data"
+        }
+      ],
+      "node": "branch:aurora:main",
+      "path": [
+        "committer:a460e37bf4d8",
+        "branch:aurora:main",
+        "repo:aurora"
+      ],
+      "ref": "c4ebd836dff7",
+      "repo": "repo:aurora",
+      "source": "Bob Bits",
+      "source_id": "committer:a460e37bf4d8",
+      "t": 1718174494,
+      "title": "refactor: simplify auth"
+    },
+    {
+      "branch": "branch:borealis:develop",
+      "color": "#4fd1ff",
+      "deletions": 50,
+      "files_changed": 3,
+      "id": "pulse:borealis:b26033189dde",
+      "insertions": 123,
+      "intensity": 0.7054,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 1,
+          "kind": "code"
+        },
+        {
+          "files": 1,
+          "kind": "tests"
+        },
+        {
+          "files": 1,
+          "kind": "docs"
+        }
+      ],
+      "node": "branch:borealis:develop",
+      "path": [
+        "committer:3ca93ad87e0b",
+        "branch:borealis:develop",
+        "repo:borealis"
+      ],
+      "ref": "b26033189dde",
+      "repo": "repo:borealis",
+      "source": "Ada Lovelace",
+      "source_id": "committer:3ca93ad87e0b",
+      "t": 1718368221,
+      "title": "feat: scheduler"
+    },
+    {
+      "branch": "branch:borealis:develop",
+      "color": "#4fd1ff",
+      "deletions": 46,
+      "files_changed": 2,
+      "id": "pulse:borealis:d4a12bbab782",
+      "insertions": 95,
+      "intensity": 0.6776,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 1,
+          "kind": "code"
+        },
+        {
+          "files": 1,
+          "kind": "tests"
+        }
+      ],
+      "node": "branch:borealis:develop",
+      "path": [
+        "committer:3ca93ad87e0b",
+        "branch:borealis:develop",
+        "repo:borealis"
+      ],
+      "ref": "d4a12bbab782",
+      "repo": "repo:borealis",
+      "source": "Ada Lovelace",
+      "source_id": "committer:3ca93ad87e0b",
+      "t": 1718410985,
+      "title": "feat: scheduler"
+    },
+    {
+      "branch": "branch:aurora:main",
+      "color": "#4fd1ff",
+      "deletions": 33,
+      "files_changed": 2,
+      "id": "pulse:aurora:57d372adf485",
+      "insertions": 100,
+      "intensity": 0.6697,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 2,
+          "kind": "code"
+        }
+      ],
+      "node": "branch:aurora:main",
+      "path": [
+        "committer:b0f029c27377",
+        "branch:aurora:main",
+        "repo:aurora"
+      ],
+      "ref": "57d372adf485",
+      "repo": "repo:aurora",
+      "source": "Carol Compiler",
+      "source_id": "committer:b0f029c27377",
+      "t": 1718428982,
+      "title": "feat: metrics"
+    },
+    {
+      "branch": "branch:aurora:main",
+      "color": "#c3e88d",
+      "deletions": 95,
+      "files_changed": 4,
+      "id": "pulse:aurora:730bada6272d",
+      "insertions": 212,
+      "intensity": 0.7835,
+      "kind": "assets",
+      "kinds": [
+        {
+          "files": 1,
+          "kind": "code"
+        },
+        {
+          "files": 1,
+          "kind": "data"
+        },
+        {
+          "files": 2,
+          "kind": "assets"
+        }
+      ],
+      "node": "branch:aurora:main",
+      "path": [
+        "committer:3ca93ad87e0b",
+        "branch:aurora:main",
+        "repo:aurora"
+      ],
+      "ref": "730bada6272d",
+      "repo": "repo:aurora",
+      "source": "Ada Lovelace",
+      "source_id": "committer:3ca93ad87e0b",
+      "t": 1718552278,
+      "title": "feat: cache"
+    },
+    {
+      "branch": "branch:borealis:develop",
+      "color": "#4fd1ff",
+      "deletions": 112,
+      "files_changed": 4,
+      "id": "pulse:borealis:97ef6d877d2e",
+      "insertions": 647,
+      "intensity": 0.9069,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 2,
+          "kind": "code"
+        },
+        {
+          "files": 1,
+          "kind": "config"
+        },
+        {
+          "files": 1,
+          "kind": "data"
+        }
+      ],
+      "node": "branch:borealis:develop",
+      "path": [
+        "committer:a460e37bf4d8",
+        "branch:borealis:develop",
+        "repo:borealis"
+      ],
+      "ref": "97ef6d877d2e",
+      "repo": "repo:borealis",
+      "source": "Bob Bits",
+      "source_id": "committer:a460e37bf4d8",
+      "t": 1718637796,
+      "title": "feat: scheduler"
+    },
+    {
+      "branch": "branch:borealis:develop",
+      "color": "#4fd1ff",
+      "deletions": 62,
+      "files_changed": 4,
+      "id": "pulse:borealis:d5888b540ba2",
+      "insertions": 287,
+      "intensity": 0.8009,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 3,
+          "kind": "code"
+        },
+        {
+          "files": 1,
+          "kind": "docs"
+        }
+      ],
+      "node": "branch:borealis:develop",
+      "path": [
+        "committer:3ca93ad87e0b",
+        "branch:borealis:develop",
+        "repo:borealis"
+      ],
+      "ref": "d5888b540ba2",
+      "repo": "repo:borealis",
+      "source": "Ada Lovelace",
+      "source_id": "committer:3ca93ad87e0b",
+      "t": 1718757025,
+      "title": "refactor: simplify scheduler"
+    },
+    {
+      "branch": "branch:aurora:main",
+      "color": "#c792ea",
+      "deletions": 0,
+      "files_changed": 1,
+      "id": "pulse:aurora:91fc2c118769",
+      "insertions": 5,
+      "intensity": 0.245,
+      "kind": "config",
+      "kinds": [
+        {
+          "files": 1,
+          "kind": "config"
+        }
+      ],
+      "node": "branch:aurora:main",
+      "path": [
+        "committer:3ca93ad87e0b",
+        "branch:aurora:main",
+        "repo:aurora"
+      ],
+      "ref": "91fc2c118769",
+      "repo": "repo:aurora",
+      "source": "Ada Lovelace",
+      "source_id": "committer:3ca93ad87e0b",
+      "t": 1718799077,
+      "title": "refactor: simplify loader"
+    },
+    {
+      "branch": "branch:aurora:main",
+      "color": "#7cffb2",
+      "deletions": 47,
+      "files_changed": 3,
+      "id": "pulse:aurora:516d322c3158",
+      "insertions": 205,
+      "intensity": 0.7566,
+      "kind": "tests",
+      "kinds": [
+        {
+          "files": 1,
+          "kind": "code"
+        },
+        {
+          "files": 2,
+          "kind": "tests"
+        }
+      ],
+      "node": "branch:aurora:main",
+      "path": [
+        "committer:a460e37bf4d8",
+        "branch:aurora:main",
+        "repo:aurora"
+      ],
+      "ref": "516d322c3158",
+      "repo": "repo:aurora",
+      "source": "Bob Bits",
+      "source_id": "committer:a460e37bf4d8",
+      "t": 1718878959,
+      "title": "refactor: simplify loader"
+    },
+    {
+      "branch": "branch:borealis:develop",
+      "color": "#4fd1ff",
+      "deletions": 5,
+      "files_changed": 3,
+      "id": "pulse:borealis:90c46849ed4e",
+      "insertions": 149,
+      "intensity": 0.6896,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 1,
+          "kind": "code"
+        },
+        {
+          "files": 1,
+          "kind": "docs"
+        },
+        {
+          "files": 1,
+          "kind": "build"
+        }
+      ],
+      "node": "branch:borealis:develop",
+      "path": [
+        "committer:3ca93ad87e0b",
+        "branch:borealis:develop",
+        "repo:borealis"
+      ],
+      "ref": "90c46849ed4e",
+      "repo": "repo:borealis",
+      "source": "Ada Lovelace",
+      "source_id": "committer:3ca93ad87e0b",
+      "t": 1718937288,
+      "title": "refactor: simplify scheduler"
+    },
+    {
+      "branch": "branch:aurora:main",
+      "color": "#c3e88d",
+      "deletions": 0,
+      "files_changed": 1,
+      "id": "pulse:aurora:b7b3f56933cc",
+      "insertions": 1,
+      "intensity": 0.12,
+      "kind": "assets",
+      "kinds": [
+        {
+          "files": 1,
+          "kind": "assets"
+        }
+      ],
+      "node": "branch:aurora:main",
+      "path": [
+        "committer:a460e37bf4d8",
+        "branch:aurora:main",
+        "repo:aurora"
+      ],
+      "ref": "b7b3f56933cc",
+      "repo": "repo:aurora",
+      "source": "Bob Bits",
+      "source_id": "committer:a460e37bf4d8",
+      "t": 1718946875,
+      "title": "fix: handle auth edge case"
+    },
+    {
+      "branch": "branch:borealis:develop",
+      "color": "#7cffb2",
+      "deletions": 33,
+      "files_changed": 3,
+      "id": "pulse:borealis:62dc0bbb4f87",
+      "insertions": 131,
+      "intensity": 0.6981,
+      "kind": "tests",
+      "kinds": [
+        {
+          "files": 3,
+          "kind": "tests"
+        }
+      ],
+      "node": "branch:borealis:develop",
+      "path": [
+        "committer:3ca93ad87e0b",
+        "branch:borealis:develop",
+        "repo:borealis"
+      ],
+      "ref": "62dc0bbb4f87",
+      "repo": "repo:borealis",
+      "source": "Ada Lovelace",
+      "source_id": "committer:3ca93ad87e0b",
+      "t": 1719074053,
+      "title": "test: cover metrics"
+    },
+    {
+      "branch": "branch:borealis:develop",
+      "color": "#4fd1ff",
+      "deletions": 41,
+      "files_changed": 2,
+      "id": "pulse:borealis:a3701adfdd69",
+      "insertions": 102,
+      "intensity": 0.6795,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 1,
+          "kind": "code"
+        },
+        {
+          "files": 1,
+          "kind": "docs"
+        }
+      ],
+      "node": "branch:borealis:develop",
+      "path": [
+        "committer:a460e37bf4d8",
+        "branch:borealis:develop",
+        "repo:borealis"
+      ],
+      "ref": "a3701adfdd69",
+      "repo": "repo:borealis",
+      "source": "Bob Bits",
+      "source_id": "committer:a460e37bf4d8",
+      "t": 1719111087,
+      "title": "test: cover parser"
+    },
+    {
+      "branch": "branch:aurora:main",
+      "color": "#4fd1ff",
+      "deletions": 52,
+      "files_changed": 3,
+      "id": "pulse:aurora:ee0568580c40",
+      "insertions": 186,
+      "intensity": 0.7488,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 2,
+          "kind": "code"
+        },
+        {
+          "files": 1,
+          "kind": "build"
+        }
+      ],
+      "node": "branch:aurora:main",
+      "path": [
+        "committer:b0f029c27377",
+        "branch:aurora:main",
+        "repo:aurora"
+      ],
+      "ref": "ee0568580c40",
+      "repo": "repo:aurora",
+      "source": "Carol Compiler",
+      "source_id": "committer:b0f029c27377",
+      "t": 1719115138,
+      "title": "test: cover loader"
+    },
+    {
+      "branch": "branch:aurora:main",
+      "color": "#4fd1ff",
+      "deletions": 10,
+      "files_changed": 3,
+      "id": "pulse:aurora:5bd570101865",
+      "insertions": 32,
+      "intensity": 0.5143,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 1,
+          "kind": "code"
+        },
+        {
+          "files": 1,
+          "kind": "docs"
+        },
+        {
+          "files": 1,
+          "kind": "assets"
+        }
+      ],
+      "node": "branch:aurora:main",
+      "path": [
+        "committer:b0f029c27377",
+        "branch:aurora:main",
+        "repo:aurora"
+      ],
+      "ref": "5bd570101865",
+      "repo": "repo:aurora",
+      "source": "Carol Compiler",
+      "source_id": "committer:b0f029c27377",
+      "t": 1719152688,
+      "title": "test: cover export"
+    },
+    {
+      "branch": "branch:borealis:develop",
+      "color": "#4fd1ff",
+      "deletions": 20,
+      "files_changed": 2,
+      "id": "pulse:borealis:fda03b7e88df",
+      "insertions": 112,
+      "intensity": 0.6686,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 1,
+          "kind": "code"
+        },
+        {
+          "files": 1,
+          "kind": "docs"
+        }
+      ],
+      "node": "branch:borealis:develop",
+      "path": [
+        "committer:b0f029c27377",
+        "branch:borealis:develop",
+        "repo:borealis"
+      ],
+      "ref": "fda03b7e88df",
+      "repo": "repo:borealis",
+      "source": "Carol Compiler",
+      "source_id": "committer:b0f029c27377",
+      "t": 1719291691,
+      "title": "docs: explain metrics"
+    },
+    {
+      "branch": "branch:aurora:main",
+      "color": "#4fd1ff",
+      "deletions": 55,
+      "files_changed": 4,
+      "id": "pulse:aurora:59d1d4911dba",
+      "insertions": 272,
+      "intensity": 0.7921,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 2,
+          "kind": "code"
+        },
+        {
+          "files": 1,
+          "kind": "tests"
+        },
+        {
+          "files": 1,
+          "kind": "docs"
+        }
+      ],
+      "node": "branch:aurora:main",
+      "path": [
+        "committer:3ca93ad87e0b",
+        "branch:aurora:main",
+        "repo:aurora"
+      ],
+      "ref": "59d1d4911dba",
+      "repo": "repo:aurora",
+      "source": "Ada Lovelace",
+      "source_id": "committer:3ca93ad87e0b",
+      "t": 1719392659,
+      "title": "docs: explain graph"
+    },
+    {
+      "branch": "branch:borealis:develop",
+      "color": "#4fd1ff",
+      "deletions": 18,
+      "files_changed": 1,
+      "id": "pulse:borealis:db56e2ab089e",
+      "insertions": 63,
+      "intensity": 0.6025,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 1,
+          "kind": "code"
+        }
+      ],
+      "node": "branch:borealis:develop",
+      "path": [
+        "committer:3ca93ad87e0b",
+        "branch:borealis:develop",
+        "repo:borealis"
+      ],
+      "ref": "db56e2ab089e",
+      "repo": "repo:borealis",
+      "source": "Ada Lovelace",
+      "source_id": "committer:3ca93ad87e0b",
+      "t": 1719444978,
+      "title": "refactor: simplify export"
+    },
+    {
+      "branch": "branch:aurora:main",
+      "color": "#c792ea",
+      "deletions": 2,
+      "files_changed": 1,
+      "id": "pulse:aurora:f2a81c9aa92f",
+      "insertions": 1,
+      "intensity": 0.1895,
+      "kind": "config",
+      "kinds": [
+        {
+          "files": 1,
+          "kind": "config"
+        }
+      ],
+      "node": "branch:aurora:main",
+      "path": [
+        "committer:b0f029c27377",
+        "branch:aurora:main",
+        "repo:aurora"
+      ],
+      "ref": "f2a81c9aa92f",
+      "repo": "repo:aurora",
+      "source": "Carol Compiler",
+      "source_id": "committer:b0f029c27377",
+      "t": 1719451804,
+      "title": "test: cover scheduler"
+    },
+    {
+      "branch": "branch:borealis:develop",
+      "color": "#4fd1ff",
+      "deletions": 57,
+      "files_changed": 3,
+      "id": "pulse:borealis:555a090348fb",
+      "insertions": 72,
+      "intensity": 0.6655,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 2,
+          "kind": "code"
+        },
+        {
+          "files": 1,
+          "kind": "build"
+        }
+      ],
+      "node": "branch:borealis:develop",
+      "path": [
+        "committer:3ca93ad87e0b",
+        "branch:borealis:develop",
+        "repo:borealis"
+      ],
+      "ref": "555a090348fb",
+      "repo": "repo:borealis",
+      "source": "Ada Lovelace",
+      "source_id": "committer:3ca93ad87e0b",
+      "t": 1719477593,
+      "title": "refactor: simplify cache"
+    },
+    {
+      "branch": "branch:borealis:develop",
+      "color": "#4fd1ff",
+      "deletions": 34,
+      "files_changed": 2,
+      "id": "pulse:borealis:855ecfc25510",
+      "insertions": 121,
+      "intensity": 0.6904,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 1,
+          "kind": "code"
+        },
+        {
+          "files": 1,
+          "kind": "tests"
+        }
+      ],
+      "node": "branch:borealis:develop",
+      "path": [
+        "committer:b0f029c27377",
+        "branch:borealis:develop",
+        "repo:borealis"
+      ],
+      "ref": "855ecfc25510",
+      "repo": "repo:borealis",
+      "source": "Carol Compiler",
+      "source_id": "committer:b0f029c27377",
+      "t": 1719600129,
+      "title": "refactor: simplify cache"
+    },
+    {
+      "branch": "branch:aurora:main",
+      "color": "#4fd1ff",
+      "deletions": 88,
+      "files_changed": 3,
+      "id": "pulse:aurora:62b108fa4f37",
+      "insertions": 459,
+      "intensity": 0.8622,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 2,
+          "kind": "code"
+        },
+        {
+          "files": 1,
+          "kind": "data"
+        }
+      ],
+      "node": "branch:aurora:main",
+      "path": [
+        "committer:b0f029c27377",
+        "branch:aurora:main",
+        "repo:aurora"
+      ],
+      "ref": "62b108fa4f37",
+      "repo": "repo:aurora",
+      "source": "Carol Compiler",
+      "source_id": "committer:b0f029c27377",
+      "t": 1719621279,
+      "title": "docs: explain parser"
+    },
+    {
+      "branch": "branch:borealis:develop",
+      "color": "#ffd166",
+      "deletions": 32,
+      "files_changed": 4,
+      "id": "pulse:borealis:5b166008d6d9",
+      "insertions": 39,
+      "intensity": 0.5847,
+      "kind": "docs",
+      "kinds": [
+        {
+          "files": 1,
+          "kind": "code"
+        },
+        {
+          "files": 3,
+          "kind": "docs"
+        }
+      ],
+      "node": "branch:borealis:develop",
+      "path": [
+        "committer:3ca93ad87e0b",
+        "branch:borealis:develop",
+        "repo:borealis"
+      ],
+      "ref": "5b166008d6d9",
+      "repo": "repo:borealis",
+      "source": "Ada Lovelace",
+      "source_id": "committer:3ca93ad87e0b",
+      "t": 1719696427,
+      "title": "chore: bump export"
+    },
+    {
+      "branch": "branch:aurora:main",
+      "color": "#ffd166",
+      "deletions": 31,
+      "files_changed": 3,
+      "id": "pulse:aurora:f9796e071469",
+      "insertions": 96,
+      "intensity": 0.6634,
+      "kind": "docs",
+      "kinds": [
+        {
+          "files": 1,
+          "kind": "tests"
+        },
+        {
+          "files": 2,
+          "kind": "docs"
+        }
+      ],
+      "node": "branch:aurora:main",
+      "path": [
+        "committer:a460e37bf4d8",
+        "branch:aurora:main",
+        "repo:aurora"
+      ],
+      "ref": "f9796e071469",
+      "repo": "repo:aurora",
+      "source": "Bob Bits",
+      "source_id": "committer:a460e37bf4d8",
+      "t": 1719733653,
+      "title": "refactor: simplify metrics"
+    },
+    {
+      "branch": "branch:aurora:main",
+      "color": "#ffd166",
+      "deletions": 0,
+      "files_changed": 1,
+      "id": "pulse:aurora:09f7c310c9cd",
+      "insertions": 11,
+      "intensity": 0.3398,
+      "kind": "docs",
+      "kinds": [
+        {
+          "files": 1,
+          "kind": "docs"
+        }
+      ],
+      "node": "branch:aurora:main",
+      "path": [
+        "committer:b0f029c27377",
+        "branch:aurora:main",
+        "repo:aurora"
+      ],
+      "ref": "09f7c310c9cd",
+      "repo": "repo:aurora",
+      "source": "Carol Compiler",
+      "source_id": "committer:b0f029c27377",
+      "t": 1719791820,
+      "title": "refactor: simplify graph"
+    },
+    {
+      "branch": "branch:aurora:main",
+      "color": "#ff8fa3",
+      "deletions": 44,
+      "files_changed": 4,
+      "id": "pulse:aurora:e012a8a45b16",
+      "insertions": 118,
+      "intensity": 0.6964,
+      "kind": "build",
+      "kinds": [
+        {
+          "files": 1,
+          "kind": "code"
+        },
+        {
+          "files": 1,
+          "kind": "docs"
+        },
+        {
+          "files": 2,
+          "kind": "build"
+        }
+      ],
+      "node": "branch:aurora:main",
+      "path": [
+        "committer:a460e37bf4d8",
+        "branch:aurora:main",
+        "repo:aurora"
+      ],
+      "ref": "e012a8a45b16",
+      "repo": "repo:aurora",
+      "source": "Bob Bits",
+      "source_id": "committer:a460e37bf4d8",
+      "t": 1719932511,
+      "title": "docs: explain graph"
+    },
+    {
+      "branch": "branch:aurora:main",
+      "color": "#7cffb2",
+      "deletions": 23,
+      "files_changed": 1,
+      "id": "pulse:aurora:e8a525171fb1",
+      "insertions": 44,
+      "intensity": 0.5769,
+      "kind": "tests",
+      "kinds": [
+        {
+          "files": 1,
+          "kind": "tests"
+        }
+      ],
+      "node": "branch:aurora:main",
+      "path": [
+        "committer:3ca93ad87e0b",
+        "branch:aurora:main",
+        "repo:aurora"
+      ],
+      "ref": "e8a525171fb1",
+      "repo": "repo:aurora",
+      "source": "Ada Lovelace",
+      "source_id": "committer:3ca93ad87e0b",
+      "t": 1719999655,
+      "title": "refactor: simplify scheduler"
+    },
+    {
+      "branch": "branch:aurora:main",
+      "color": "#4fd1ff",
+      "deletions": 27,
+      "files_changed": 1,
+      "id": "pulse:aurora:21bf6742cb01",
+      "insertions": 76,
+      "intensity": 0.635,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 1,
+          "kind": "code"
+        }
+      ],
+      "node": "branch:aurora:main",
+      "path": [
+        "committer:3ca93ad87e0b",
+        "branch:aurora:main",
+        "repo:aurora"
+      ],
+      "ref": "21bf6742cb01",
+      "repo": "repo:aurora",
+      "source": "Ada Lovelace",
+      "source_id": "committer:3ca93ad87e0b",
+      "t": 1720252375,
+      "title": "feat: parser"
+    },
+    {
+      "branch": "branch:aurora:main",
+      "color": "#4fd1ff",
+      "deletions": 61,
+      "files_changed": 3,
+      "id": "pulse:aurora:71270a6bce66",
+      "insertions": 103,
+      "intensity": 0.6981,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 2,
+          "kind": "code"
+        },
+        {
+          "files": 1,
+          "kind": "docs"
+        }
+      ],
+      "node": "branch:aurora:main",
+      "path": [
+        "committer:3ca93ad87e0b",
+        "branch:aurora:main",
+        "repo:aurora"
+      ],
+      "ref": "71270a6bce66",
+      "repo": "repo:aurora",
+      "source": "Ada Lovelace",
+      "source_id": "committer:3ca93ad87e0b",
+      "t": 1720466933,
+      "title": "chore: bump cache"
+    },
+    {
+      "branch": "branch:aurora:main",
+      "color": "#4fd1ff",
+      "deletions": 44,
+      "files_changed": 4,
+      "id": "pulse:aurora:312e134ada17",
+      "insertions": 215,
+      "intensity": 0.7603,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 2,
+          "kind": "code"
+        },
+        {
+          "files": 1,
+          "kind": "tests"
+        },
+        {
+          "files": 1,
+          "kind": "assets"
+        }
+      ],
+      "node": "branch:aurora:main",
+      "path": [
+        "committer:a460e37bf4d8",
+        "branch:aurora:main",
+        "repo:aurora"
+      ],
+      "ref": "312e134ada17",
+      "repo": "repo:aurora",
+      "source": "Bob Bits",
+      "source_id": "committer:a460e37bf4d8",
+      "t": 1720703273,
+      "title": "fix: handle parser edge case"
+    },
+    {
+      "branch": "branch:aurora:main",
+      "color": "#4fd1ff",
+      "deletions": 75,
+      "files_changed": 3,
+      "id": "pulse:aurora:653d1156f525",
+      "insertions": 176,
+      "intensity": 0.756,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 2,
+          "kind": "code"
+        },
+        {
+          "files": 1,
+          "kind": "docs"
+        }
+      ],
+      "node": "branch:aurora:main",
+      "path": [
+        "committer:3ca93ad87e0b",
+        "branch:aurora:main",
+        "repo:aurora"
+      ],
+      "ref": "653d1156f525",
+      "repo": "repo:aurora",
+      "source": "Ada Lovelace",
+      "source_id": "committer:3ca93ad87e0b",
+      "t": 1720783997,
+      "title": "fix: handle metrics edge case"
+    },
+    {
+      "branch": "branch:aurora:main",
+      "color": "#4fd1ff",
+      "deletions": 47,
+      "files_changed": 3,
+      "id": "pulse:aurora:d7bb5c0b8a1c",
+      "insertions": 228,
+      "intensity": 0.7685,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 1,
+          "kind": "code"
+        },
+        {
+          "files": 1,
+          "kind": "build"
+        },
+        {
+          "files": 1,
+          "kind": "data"
+        }
+      ],
+      "node": "branch:aurora:main",
+      "path": [
+        "committer:3ca93ad87e0b",
+        "branch:aurora:main",
+        "repo:aurora"
+      ],
+      "ref": "d7bb5c0b8a1c",
+      "repo": "repo:aurora",
+      "source": "Ada Lovelace",
+      "source_id": "committer:3ca93ad87e0b",
+      "t": 1720976914,
+      "title": "fix: handle metrics edge case"
+    },
+    {
+      "branch": "branch:aurora:main",
+      "color": "#4fd1ff",
+      "deletions": 53,
+      "files_changed": 3,
+      "id": "pulse:aurora:7f47eb0ef914",
+      "insertions": 103,
+      "intensity": 0.6913,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 1,
+          "kind": "code"
+        },
+        {
+          "files": 1,
+          "kind": "tests"
+        },
+        {
+          "files": 1,
+          "kind": "docs"
+        }
+      ],
+      "node": "branch:aurora:main",
+      "path": [
+        "committer:a460e37bf4d8",
+        "branch:aurora:main",
+        "repo:aurora"
+      ],
+      "ref": "7f47eb0ef914",
+      "repo": "repo:aurora",
+      "source": "Bob Bits",
+      "source_id": "committer:a460e37bf4d8",
+      "t": 1721056410,
+      "title": "feat: auth"
+    },
+    {
+      "branch": "branch:aurora:main",
+      "color": "#7cffb2",
+      "deletions": 69,
+      "files_changed": 4,
+      "id": "pulse:aurora:91375945eaf1",
+      "insertions": 145,
+      "intensity": 0.7343,
+      "kind": "tests",
+      "kinds": [
+        {
+          "files": 2,
+          "kind": "tests"
+        },
+        {
+          "files": 1,
+          "kind": "docs"
+        },
+        {
+          "files": 1,
+          "kind": "build"
+        }
+      ],
+      "node": "branch:aurora:main",
+      "path": [
+        "committer:a460e37bf4d8",
+        "branch:aurora:main",
+        "repo:aurora"
+      ],
+      "ref": "91375945eaf1",
+      "repo": "repo:aurora",
+      "source": "Bob Bits",
+      "source_id": "committer:a460e37bf4d8",
+      "t": 1721108971,
+      "title": "refactor: simplify export"
+    },
+    {
+      "branch": "branch:aurora:main",
+      "color": "#4fd1ff",
+      "deletions": 22,
+      "files_changed": 2,
+      "id": "pulse:aurora:81664d4d9887",
+      "insertions": 84,
+      "intensity": 0.6389,
+      "kind": "code",
+      "kinds": [
+        {
+          "files": 1,
+          "kind": "code"
+        },
+        {
+          "files": 1,
+          "kind": "docs"
+        }
+      ],
+      "node": "branch:aurora:main",
+      "path": [
+        "committer:b0f029c27377",
+        "branch:aurora:main",
+        "repo:aurora"
+      ],
+      "ref": "81664d4d9887",
+      "repo": "repo:aurora",
+      "source": "Carol Compiler",
+      "source_id": "committer:b0f029c27377",
+      "t": 1721151903,
+      "title": "chore: bump scheduler"
+    }
+  ],
+  "schema_version": "1",
+  "sources": [
+    {
+      "branch": "main",
+      "commits": 38,
+      "head": "81664d4d9887cb7c6a5337d23ce155b2dbf39d66",
+      "name": "aurora",
+      "path": "~/code/aurora"
+    },
+    {
+      "branch": "develop",
+      "commits": 26,
+      "head": "5b166008d6d9100dfbb8fa0313b238c219c27bfa",
+      "name": "borealis",
+      "path": "~/code/borealis"
+    }
+  ],
+  "t_max": 1721151903,
+  "t_min": 1716081029
+}

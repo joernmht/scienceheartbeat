@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+title: scienceheartbeat
+message: "If you use this software, please cite it as below."
+type: software
+authors:
+  - name: "scienceheartbeat contributors"
+url: "https://github.com/joernmht/scienceheartbeat"
+repository-code: "https://github.com/joernmht/scienceheartbeat"
+license: Apache-2.0
+version: 0.1.0
+date-released: "2026-06-19"
+abstract: >-
+  A deterministic heartbeat dashboard that turns the change history of git
+  repositories into a living graph: repository and branch nodes pulse in
+  colours keyed to the kind of change, with a scrub-able timeline. The pipeline
+  emits a frozen, content-hashed JSON document that is byte-for-byte
+  reproducible, consumed by a dependency-free web dashboard.
+keywords:
+  - git
+  - visualization
+  - dashboard
+  - graph
+  - determinism
+  - observability
