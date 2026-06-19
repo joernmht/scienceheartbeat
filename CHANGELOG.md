@@ -6,6 +6,41 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- **Machine activity** (`scienceheartbeat.activity`): the heartbeat now beats
+  for the whole research machine, not just commits. Deterministic, redacting
+  parsers turn four new signals into events — recurring **loop runs**
+  (`logs/*.log`), repository **syncs** (push/pull from git remote-tracking
+  reflogs), inbound **messages** (a Telegram/remote audit log) and remote
+  **sessions** (`.sessions.json`, with agent → repo *access* detection).
+- **Generalised pulse** (schema v2): a `Pulse` is now any activity event, not
+  only a commit. Adds an `event` discriminator (`commit`/`sync`/`loop_run`/
+  `message`/`session`/`access`), a free-form `category` palette key (replaces
+  the commit-only `kind`) and a `detail` line; the commit churn fields are now
+  optional. The reserved `server`/`agent`/`bot`/`loop` node kinds and
+  `accessed`/`runs_on`/`notifies` edges are now emitted.
+- **Server-centric layout** (layout v2) used when activity is present: the
+  server sits at the centre with the loops/bot/agents that run on it on an
+  inner ring, repositories and branches further out, committers outermost.
+- **Activity event colours** added to the palette (palette v2): `push`, `pull`,
+  `loop-ok`, `loop-fail`, `msg-in`, `msg-out`, `session`, `access`.
+- **Dashboard**: renders the new node kinds, a per-event "now playing" panel,
+  a two-group legend (changes + activity), and a new **activity / commit list
+  side rail** — time-ordered, filterable by event type, click a row to seek.
+- **CLI**: `--activity` (with `--loops-dir`, `--no-loops`, `--owner-email`,
+  `--sync-limit`) on `build`/`serve`/`scan`.
+
+### Privacy
+
+- Secrets never reach an artifact: all free text passes a redaction pass that
+  masks tokens (Overleaf git-bridge `olp_…`, GitHub, Slack), URL credentials
+  and e-mails; remote hosts are surfaced without their token; loop-run bodies
+  are never read into events.
+- `--activity` output is **private** (real machine activity): it defaults to a
+  gitignored `heartbeat-private/` directory and prints a do-not-publish notice.
+  The public demo under `examples/` uses synthetic data only.
+
 ## [0.1.0] — 2026-06-19
 
 Initial release — the MVP.

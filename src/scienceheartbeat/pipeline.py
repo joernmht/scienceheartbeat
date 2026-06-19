@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from scienceheartbeat.activity.collect import DEFAULT_LOOPS_DIR, collect_activity
 from scienceheartbeat.core.model import HeartbeatDocument
 from scienceheartbeat.export.document import build_document
 from scienceheartbeat.scan.discover import discover_repos
@@ -46,8 +47,22 @@ def heartbeat_from_paths(
     limit: int | None = None,
     include_merges: bool = False,
     max_depth: int = 3,
+    activity: bool = False,
+    loops_dir: str | Path | None = DEFAULT_LOOPS_DIR,
+    owner_email: str | None = None,
+    sync_limit: int | None = None,
 ) -> HeartbeatDocument:
-    """Build a complete heartbeat document from the repositories under ``paths``."""
+    """Build a complete heartbeat document from the repositories under ``paths``.
+
+    With ``activity=True`` the machine-activity stream (repository syncs, plus
+    loop runs / messages / sessions from ``loops_dir``) is collected and folded
+    into the document. ``owner_email`` names the human messages travel to;
+    ``sync_limit`` caps the most-recent syncs kept per repository. This output
+    is **private** — it reflects real machine activity and must not be published.
+    """
 
     repos = scan_paths(paths, limit=limit, include_merges=include_merges, max_depth=max_depth)
-    return build_document(repos)
+    if not activity:
+        return build_document(repos)
+    events = collect_activity(repos, loops_dir=loops_dir, sync_limit=sync_limit)
+    return build_document(repos, events, owner_email=owner_email)

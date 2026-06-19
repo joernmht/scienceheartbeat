@@ -2,7 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from scienceheartbeat.core.model import NodeKind
+from scienceheartbeat.activity.model import ActivityEvent
+from scienceheartbeat.core.model import EdgeKind, EventKind, NodeKind
 from scienceheartbeat.graph import build_graph, intensity_for
 from scienceheartbeat.scan import scan_repo
 
@@ -42,3 +43,40 @@ def test_nodes_have_layout_positions(sample_repo: Path) -> None:
     assert (repo.x, repo.y) == (0.0, 0.0)
     committers = [n for n in nodes if n.kind == NodeKind.COMMITTER]
     assert all((n.x, n.y) != (0.0, 0.0) for n in committers)
+
+
+def test_build_graph_with_activity(sample_repo: Path, sample_events: list[ActivityEvent]) -> None:
+    nodes, edges, pulses = build_graph([scan_repo(sample_repo)], sample_events)
+
+    node_kinds = {n.kind for n in nodes}
+    assert {NodeKind.SERVER, NodeKind.LOOP, NodeKind.BOT, NodeKind.AGENT} <= node_kinds
+
+    # In the server-centric layout the server is the origin.
+    server = next(n for n in nodes if n.kind == NodeKind.SERVER)
+    assert (server.x, server.y) == (0.0, 0.0)
+
+    edge_kinds = {e.kind for e in edges}
+    assert EdgeKind.RUNS_ON in edge_kinds  # loop/bot/agent -> server
+    assert EdgeKind.ACCESSED in edge_kinds  # server -> synced repo, agent -> touched repo
+
+    # 3 commits + 5 activity events, all events present.
+    assert len(pulses) == 3 + len(sample_events)
+    assert {p.event for p in pulses if p.event != EventKind.COMMIT} == {
+        EventKind.LOOP_RUN,
+        EventKind.SYNC,
+        EventKind.MESSAGE,
+        EventKind.SESSION,
+        EventKind.ACCESS,
+    }
+
+    # The sync/access events wired to the matching repo node.
+    sync = next(p for p in pulses if p.event == EventKind.SYNC)
+    assert sync.repo.startswith("repo:")
+    assert sync.node == sync.repo
+
+
+def test_activity_is_opt_in(sample_repo: Path) -> None:
+    # No events -> exactly the git-only graph (no server node).
+    nodes, _, pulses = build_graph([scan_repo(sample_repo)])
+    assert all(n.kind != NodeKind.SERVER for n in nodes)
+    assert all(p.event == EventKind.COMMIT for p in pulses)

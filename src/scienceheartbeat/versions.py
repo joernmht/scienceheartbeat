@@ -20,13 +20,17 @@ __all__ = [
 PACKAGE_VERSION = "0.1.0"
 
 #: Version of ``schema/heartbeat.schema.json`` and the document shape.
-SCHEMA_VERSION = "1"
+#: ``2`` generalised the pulse from "one commit" to "one activity event"
+#: (adds ``event``/``category``/``detail``, makes commit churn fields optional).
+SCHEMA_VERSION = "2"
 
-#: Version of the change-kind → colour palette.
-PALETTE_VERSION = "1"
+#: Version of the colour palette. ``2`` adds the event-category colours
+#: (sync/loop/message/session/access) alongside the change-kind colours.
+PALETTE_VERSION = "2"
 
 #: Version of the path → change-kind classification rules.
 CLASSIFIER_VERSION = "1"
 
-#: Version of the deterministic graph-layout algorithm.
-LAYOUT_VERSION = "1"
+#: Version of the deterministic graph-layout algorithm. ``2`` adds the
+#: server-centric layout used when machine-activity nodes are present.
+LAYOUT_VERSION = "2"

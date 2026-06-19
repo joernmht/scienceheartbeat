@@ -27,6 +27,7 @@ __all__ = [
     "ChangeKind",
     "Edge",
     "EdgeKind",
+    "EventKind",
     "HeartbeatDocument",
     "KindCount",
     "Node",
@@ -75,8 +76,11 @@ class NodeKind(StrEnum):
 class EdgeKind(StrEnum):
     """The relationship an edge encodes.
 
-    ``AUTHORED`` (committer → branch) and ``BRANCH_OF`` (branch → repo) are
-    emitted by the MVP. The remainder are reserved for the roadmap.
+    ``AUTHORED`` (committer → branch) and ``BRANCH_OF`` (branch → repo) come
+    from git history. The remainder wire up the *machine activity* graph:
+    ``RUNS_ON`` (a loop/bot/agent → the server it runs on), ``NOTIFIES`` (a
+    loop → the bot, and the bot → the human owner it pings) and ``ACCESSED``
+    (an agent/loop → a repository it touched or synced).
     """
 
     AUTHORED = "authored"
@@ -84,6 +88,24 @@ class EdgeKind(StrEnum):
     ACCESSED = "accessed"
     RUNS_ON = "runs_on"
     NOTIFIES = "notifies"
+
+
+class EventKind(StrEnum):
+    """The kind of activity a :class:`Pulse` represents.
+
+    The MVP emitted only commits. The heartbeat now beats for the whole
+    research machine, so a pulse can also be a repository *sync* (push/pull),
+    a recurring *loop run*, a Telegram/remote *message*, a remote *session*,
+    or an agent *access* to a repository. The discriminator lets the dashboard
+    format each event without guessing from its other fields.
+    """
+
+    COMMIT = "commit"
+    SYNC = "sync"
+    LOOP_RUN = "loop_run"
+    MESSAGE = "message"
+    SESSION = "session"
+    ACCESS = "access"
 
 
 class _Frozen(BaseModel):
@@ -126,19 +148,28 @@ class Edge(_Frozen):
 
 
 class Pulse(_Frozen):
-    """A single change event — one git commit — that lights up a node.
+    """A single activity event that lights up a node on the timeline.
 
-    ``path`` is the chain of node ids the pulse travels along for the
-    travelling-light effect (committer → branch → repo). ``node`` is the
-    primary node that brightens (the branch). ``t`` is the author time in UTC
-    epoch seconds: *when the change was made*.
+    A pulse is the one unit of "something happened" — a commit, a repository
+    sync, a loop run, a message, a session or an agent access (see
+    :class:`EventKind`). ``path`` is the chain of node ids the pulse travels
+    along for the travelling-light effect (e.g. committer → branch → repo for a
+    commit, or server → loop for a loop run). ``node`` is the primary node that
+    brightens. ``t`` is the event time in UTC epoch seconds.
+
+    ``category`` is the palette key that colours the pulse: a
+    :class:`ChangeKind` value for commits, or an event category such as
+    ``push`` / ``loop-ok`` / ``msg-in`` for activity (see the document palette).
+    The commit-specific churn fields (``ref``, ``insertions``, ``deletions``,
+    ``files_changed``, ``kinds``) default to empty for non-commit events.
     """
 
     id: str
     t: int
+    event: EventKind = EventKind.COMMIT
     node: str
     path: list[str]
-    kind: ChangeKind
+    category: str
     color: str
     intensity: float = Field(ge=0.0, le=1.0)
     source: str
@@ -146,11 +177,12 @@ class Pulse(_Frozen):
     repo: str
     branch: str
     title: str
-    ref: str
-    insertions: int = Field(ge=0)
-    deletions: int = Field(ge=0)
-    files_changed: int = Field(ge=0)
-    kinds: list[KindCount]
+    detail: str = ""
+    ref: str = ""
+    insertions: int = Field(default=0, ge=0)
+    deletions: int = Field(default=0, ge=0)
+    files_changed: int = Field(default=0, ge=0)
+    kinds: list[KindCount] = Field(default_factory=list)
 
 
 class SourceInfo(_Frozen):

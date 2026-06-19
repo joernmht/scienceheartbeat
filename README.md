@@ -57,6 +57,17 @@ scienceheartbeat scan ~/code/my-repo > heartbeat.json
 `build` writes a single, double-clickable `index.html` (everything inlined —
 no server, no network) plus the underlying `heartbeat.json`.
 
+It can also beat for the **whole machine**, not just commits — repository syncs,
+recurring loop runs, remote messages and sessions:
+
+```bash
+# PRIVATE: ingests real machine activity → defaults to gitignored heartbeat-private/.
+scienceheartbeat build ~/code --activity --owner-email you@example.com
+```
+
+See [Machine activity](#machine-activity-private) below — this output is private
+and redacted; never publish it.
+
 From Python:
 
 ```python
@@ -82,7 +93,35 @@ open it in a browser to see the heartbeat without scanning anything.
   takes that colour. The legend shows the palette and per-kind counts.
 - **Timeline.** An ECG-style waveform of activity over time. Press play, change
   speed (0.5×–4×), or click/drag the waveform to scrub. The "now playing" panel
-  names the change's **source** (committer), repo/branch, message and churn.
+  names each event's **source**, target and detail.
+- **Activity side rail.** A time-ordered, click-to-seek list of events you can
+  filter by type (commits, syncs, loops, messages, sessions).
+
+With `--activity`, machine nodes appear too: a central **server** with the
+**loops**, **bot** and **agents/sessions** that run on it, `sync`/`loop`/
+`message`/`session`/`access` pulses, and their own legend colours.
+
+## Machine activity (private)
+
+`--activity` folds four extra signals into the heartbeat, each via a
+deterministic, **redacting** parser:
+
+| signal | source | becomes |
+|---|---|---|
+| repository syncs | git remote-tracking reflogs | `sync` (push/pull) |
+| recurring loop runs | run logs (`logs/*.log`) | `loop_run` (ok/fail) |
+| remote messages | a Telegram/remote audit log | `message` (inbound) |
+| remote sessions | `.sessions.json` | `session` + repo `access` |
+
+**Privacy.** This reflects a real machine, so it is treated as private. All free
+text is masked for tokens (e.g. the Overleaf git-bridge `olp_…`), URL
+credentials and e-mails before it can reach a document; remote hosts are shown
+without their token; loop-run bodies are never read in. `--activity` defaults to
+a **gitignored `heartbeat-private/`** directory and prints a do-not-publish
+notice. The public demo under `examples/` uses **synthetic** data only.
+
+Flags: `--activity`, `--loops-dir DIR`, `--no-loops` (syncs only),
+`--owner-email EMAIL`, `--sync-limit N`.
 
 ## How the change kinds are coloured
 

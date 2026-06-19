@@ -15,6 +15,9 @@ from pathlib import Path
 
 import pytest
 
+from scienceheartbeat.activity.model import ActivityEvent, Category
+from scienceheartbeat.core.model import EventKind, NodeKind
+
 pytestmark = pytest.mark.skipif(shutil.which("git") is None, reason="git not available")
 
 
@@ -103,3 +106,70 @@ def empty_repo(tmp_path: Path) -> Path:
     repo.mkdir()
     _run(["init", "-q"], repo)
     return repo
+
+
+@pytest.fixture
+def sample_events() -> list[ActivityEvent]:
+    """A small, fixed activity stream covering every event kind.
+
+    The ``sample`` repo name matches :func:`sample_repo`, so the sync/access
+    events wire to that repository's node.
+    """
+
+    return [
+        ActivityEvent(
+            event=EventKind.LOOP_RUN,
+            t=1_700_000_500,
+            uid="l1",
+            actor_kind=NodeKind.LOOP,
+            actor_key="standup",
+            actor_label="standup",
+            category=Category.LOOP_OK,
+            title="standup loop",
+            detail="exit 0 · 5s",
+        ),
+        ActivityEvent(
+            event=EventKind.SYNC,
+            t=1_700_000_600,
+            uid="s1",
+            actor_kind=NodeKind.SERVER,
+            actor_key="server",
+            actor_label="the box",
+            category=Category.PUSH,
+            title="push → github.com",
+            detail="main · abc1234",
+            repo="sample",
+        ),
+        ActivityEvent(
+            event=EventKind.MESSAGE,
+            t=1_700_000_700,
+            uid="m1",
+            actor_kind=NodeKind.BOT,
+            actor_key="telegram",
+            actor_label="telegram bot",
+            category=Category.MSG_IN,
+            title="morning briefing please",
+            direction="in",
+        ),
+        ActivityEvent(
+            event=EventKind.SESSION,
+            t=1_700_000_800,
+            uid="x1",
+            actor_kind=NodeKind.AGENT,
+            actor_key="x",
+            actor_label="session #1",
+            category=Category.SESSION,
+            title="summarise sample",
+        ),
+        ActivityEvent(
+            event=EventKind.ACCESS,
+            t=1_700_000_800,
+            uid="x1:sample",
+            actor_kind=NodeKind.AGENT,
+            actor_key="x",
+            actor_label="session #1",
+            category=Category.ACCESS,
+            title="session #1 touched sample",
+            repo="sample",
+        ),
+    ]

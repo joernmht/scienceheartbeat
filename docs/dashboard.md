@@ -19,23 +19,30 @@ mulberry32 PRNG — there is no `Math.random` anywhere.
 
 - **Nodes** glow with an additive radial gradient. A node's brightness is the
   sum of its recent pulses' activations; its colour is the activation-weighted
-  blend of those pulses' kind colours. Repos are largest, then branches, then
-  committers.
-- **Pulses** ripple along their `path`: when the cursor reaches a commit, a
-  light travels committer → branch → repo, and the branch node flares then
-  decays like a heartbeat (a quick rise, an exponential fall).
+  blend of those pulses' category colours. When machine activity is present the
+  **server** is largest and central, then repos, then the loop/bot/agent
+  actors, branches and committers; each machine kind has its own idle tint.
+- **Pulses** ripple along their `path`: a commit travels committer → branch →
+  repo, a loop run server → loop, a sync server → repo, and so on. The
+  destination node flares then decays like a heartbeat (a quick rise, an
+  exponential fall). The travelling light handles any path length (1–3 hops).
 - **The ECG strip** at the bottom is an activity waveform across the whole
-  timeline, its stroke coloured by the dominant change-kind at each moment. A
+  timeline, its stroke coloured by the dominant category at each moment. A
   playhead marks the cursor.
-- **The legend** lists the palette and per-kind commit counts.
-- **"Now playing"** names the change at the cursor: its source (committer),
-  repo/branch, message, ref and churn.
+- **The legend** lists the palette in two groups — change kinds and activity
+  categories — with per-category counts.
+- **"Now playing"** names the event at the cursor: its source, target and the
+  detail appropriate to its kind (commit churn, sync host, loop status, …).
+- **The activity side rail** is a time-ordered, click-to-seek list of events,
+  filterable by type (all / commits / syncs / loops / msgs / sessions); the
+  current event is highlighted and scrolled into view during playback.
 
 ## Controls
 
 - **Play / pause** and **speed** (0.5×–4×). The timeline loops for an ambient,
   living feel.
 - **Scrub** with the slider, or **click/drag the ECG** waveform.
+- **Filter** the side rail by event type; **click a row** to seek to it.
 - **Pan** by dragging the canvas, **zoom** with the wheel, **double-click** to
   reset the view. **Hover** a node for a tooltip.
 

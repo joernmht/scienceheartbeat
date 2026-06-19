@@ -15,6 +15,7 @@ import argparse
 import sys
 from collections.abc import Sequence
 
+from scienceheartbeat.activity.collect import DEFAULT_LOOPS_DIR
 from scienceheartbeat.core.model import HeartbeatDocument
 from scienceheartbeat.export.json_io import dumps
 from scienceheartbeat.pipeline import heartbeat_from_paths
@@ -28,6 +29,11 @@ from scienceheartbeat.versions import (
 
 __all__ = ["build_parser", "main"]
 
+#: Default output directory when machine activity is ingested. It is separate
+#: from the public default and gitignored, because the artifact is private.
+_PRIVATE_OUT = "heartbeat-private"
+_PUBLIC_OUT = "heartbeat-dashboard"
+
 
 def _add_scan_options(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("paths", nargs="+", help="Repositories or folders to scan.")
@@ -39,6 +45,28 @@ def _add_scan_options(parser: argparse.ArgumentParser) -> None:
     )
     parser.add_argument(
         "--max-depth", type=int, default=3, help="How deep to search folders for repos."
+    )
+    group = parser.add_argument_group("machine activity (PRIVATE — do not publish)")
+    group.add_argument(
+        "--activity",
+        action="store_true",
+        help="Also ingest machine activity (syncs, loop runs, messages, sessions).",
+    )
+    group.add_argument(
+        "--loops-dir",
+        default=DEFAULT_LOOPS_DIR,
+        help="Loops directory for loop/message/session logs (default: %(default)s).",
+    )
+    group.add_argument(
+        "--no-loops",
+        action="store_true",
+        help="With --activity, ingest repository syncs only (skip the loops dir).",
+    )
+    group.add_argument(
+        "--owner-email", default=None, help="Owner identity that messages travel to/from."
+    )
+    group.add_argument(
+        "--sync-limit", type=int, default=None, help="Max recent syncs kept per repo."
     )
 
 
@@ -52,14 +80,16 @@ def build_parser() -> argparse.ArgumentParser:
     p_build = sub.add_parser("build", help="Write the dashboard and data to a directory.")
     _add_scan_options(p_build)
     p_build.add_argument(
-        "--out", default="heartbeat-dashboard", help="Output directory (default: %(default)s)."
+        "--out",
+        default=None,
+        help=f"Output directory (default: {_PUBLIC_OUT}/, or {_PRIVATE_OUT}/ with --activity).",
     )
     p_build.add_argument("--json-only", action="store_true", help="Write only heartbeat.json.")
     p_build.add_argument("--html-only", action="store_true", help="Write only index.html.")
 
     p_serve = sub.add_parser("serve", help="Build and serve the dashboard over HTTP.")
     _add_scan_options(p_serve)
-    p_serve.add_argument("--out", default="heartbeat-dashboard", help="Output directory.")
+    p_serve.add_argument("--out", default=None, help="Output directory.")
     p_serve.add_argument("--host", default="127.0.0.1", help="Bind host.")
     p_serve.add_argument("--port", type=int, default=8765, help="Bind port.")
     p_serve.add_argument("--no-open", action="store_true", help="Do not open a browser.")
@@ -93,11 +123,21 @@ def main(argv: Sequence[str] | None = None) -> int:
         )
         return 0
 
+    if args.activity:
+        print(
+            "scienceheartbeat: ingesting PRIVATE machine activity — do not publish this artifact.",
+            file=sys.stderr,
+        )
+
     document = heartbeat_from_paths(
         list(args.paths),
         limit=args.limit,
         include_merges=args.merges,
         max_depth=args.max_depth,
+        activity=args.activity,
+        loops_dir=None if args.no_loops else args.loops_dir,
+        owner_email=args.owner_email,
+        sync_limit=args.sync_limit,
     )
 
     if args.command == "scan":
@@ -106,22 +146,24 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     from scienceheartbeat.dashboard.serve import serve, write_dashboard
 
+    out = args.out or (_PRIVATE_OUT if args.activity else _PUBLIC_OUT)
+
     if args.command == "build":
         write_dashboard(
             document,
-            args.out,
+            out,
             html=not args.json_only,
             json=not args.html_only,
         )
         _print_summary(document)
-        print(f"wrote dashboard to {args.out}/")
+        print(f"wrote dashboard to {out}/")
         return 0
 
     if args.command == "serve":
         _print_summary(document)
         serve(
             document,
-            args.out,
+            out,
             host=args.host,
             port=args.port,
             open_browser=not args.no_open,
