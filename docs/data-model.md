@@ -22,28 +22,48 @@ model is frozen and forbids extra fields.
 
 ## `Node`
 
-`id`, `kind` (`repo` · `branch` · `committer` · reserved: `server` · `agent` ·
-`bot` · `loop`), `label`, `parent` (e.g. a branch's repo id), and the baked
-layout `x`, `y`.
+`id`, `kind` (git: `repo` · `branch` · `committer`; machine: `server` ·
+`agent` · `bot` · `loop`), `label`, `parent` (e.g. a branch's repo id, or the
+server for a machine actor), and the baked layout `x`, `y`.
 
 ## `Edge`
 
-`id`, `kind` (`authored` · `branch_of` · reserved: `accessed` · `runs_on` ·
-`notifies`), `source`, `target`, optional `label`.
+`id`, `kind`, `source`, `target`, optional `label`. Kinds: `authored`
+(committer → branch) and `branch_of` (branch → repo) from git; `runs_on`
+(loop/bot/agent → server), `notifies` (loop → bot, bot → owner) and `accessed`
+(server → synced repo, agent → touched repo) from machine activity.
 
 ## `Pulse`
 
-One commit. `t` (author epoch seconds), `node` (the branch that lights up),
-`path` (`[committer, branch, repo]` for the travelling light), `kind` + `color`,
-`intensity` (0–1), `source` + `source_id` (the committer), `repo`, `branch`,
-`title`, `ref` (short sha), `insertions`, `deletions`, `files_changed`, and
-`kinds` (the per-kind file breakdown).
+One activity event (see **Event kinds**). Fields: `t` (epoch seconds), `event`
+(the discriminator), `node` (the node that lights up), `path` (the node-id
+chain for the travelling light — e.g. `[committer, branch, repo]` for a commit,
+`[server, loop]` for a loop run), `category` + `color` (the palette key and its
+colour), `intensity` (0–1), `source` + `source_id` (the actor), `repo`,
+`branch`, `title`, `detail`. The commit-only fields `ref` (short sha),
+`insertions`, `deletions`, `files_changed` and `kinds` (per-kind file breakdown)
+default to empty for non-commit events.
 
-## Change kinds
+## Event kinds
 
-`code`, `tests`, `docs`, `build`, `deps`, `config`, `data`, `assets`, `other`.
-The declaration order is also the tie-break used to choose a commit's primary
-kind. See [`classify/change_kind.py`](../src/scienceheartbeat/classify/change_kind.py).
+`commit`, `sync`, `loop_run`, `message`, `session`, `access`. Non-commit events
+come from the deterministic, **redacting** [`activity/`](../src/scienceheartbeat/activity)
+source (loop logs, git remote-tracking reflogs, a Telegram audit log,
+`.sessions.json`). All free text is masked for tokens/credentials/e-mails before
+it reaches a pulse, and the real-activity artifact is **private** (the public
+demo is synthetic).
+
+## Categories and the palette
+
+The document `palette` maps every `category` to a hex colour. Two families:
+
+- **Change kinds** (commit `category`): `code`, `tests`, `docs`, `build`,
+  `deps`, `config`, `data`, `assets`, `other`. Declaration order is also the
+  tie-break for a commit's primary kind. See
+  [`classify/change_kind.py`](../src/scienceheartbeat/classify/change_kind.py).
+- **Event categories** (activity `category`): `push`, `pull`, `loop-ok`,
+  `loop-fail`, `msg-in`, `msg-out`, `session`, `access`. See
+  [`activity/model.py`](../src/scienceheartbeat/activity/model.py).
 
 ## Identities
 

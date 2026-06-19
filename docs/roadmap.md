@@ -1,11 +1,32 @@
 # Roadmap
 
-The MVP visualises repository changes and their committers. The data model
-already reserves the node and edge kinds for what comes next, so each can be
-added **without a schema migration** — extend along these seams rather than
-reshaping the schema.
+The MVP visualised repository changes and their committers. The reserved node
+and edge kinds for "what comes next" have now landed (see
+[`activity/`](data-model.md) and the [architecture](architecture.md)): the
+heartbeat beats for the whole research machine, not just commits.
 
-## Reserved kinds
+## Shipped: machine activity
+
+`NodeKind` `server` / `agent` / `bot` / `loop` and `EdgeKind` `accessed` /
+`runs_on` / `notifies` are now emitted by the `scienceheartbeat.activity`
+source. The participants below are all implemented:
+
+- **Server node** — a single `server` node for the machine; loops, the bot and
+  agents connect to it with `runs_on` edges.
+- **Loops** — recurring local jobs are `loop` nodes; each run is a `loop_run`
+  pulse keyed by exit status (`loop-ok` / `loop-fail`).
+- **Telegram/remote bot** — a `bot` node with `notifies` edges (loop → bot →
+  owner); inbound messages are `message` pulses.
+- **Agents / sessions** — `agent` nodes for remote sessions; when a session
+  touches a repository an `accessed` edge + `access` pulse is drawn.
+- **Syncs** — repository push/pull from the git remote-tracking reflogs become
+  `sync` pulses (server → repo), wiring the repo ring to the machine centre.
+
+Everything is deterministic and **redacting** — see the privacy notes in the
+[README](../README.md) and [data model](data-model.md). The real-activity
+artifact is private; the public demo is synthetic.
+
+## Original design note (reserved kinds)
 
 `NodeKind`: `server`, `agent`, `bot`, `loop`.
 `EdgeKind`: `accessed`, `runs_on`, `notifies`.

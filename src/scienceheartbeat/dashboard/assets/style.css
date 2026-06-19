@@ -110,14 +110,111 @@ html, body {
 .legend-row .nm { flex: 1; text-transform: capitalize; }
 .legend-row .ct { color: var(--ink-dim); font-variant-numeric: tabular-nums; }
 
-#nowplaying {
+#sidebar {
   top: 64px;
   right: 18px;
-  max-width: 290px;
-  min-height: 30px;
+  bottom: 104px;
+  width: 304px;
+  max-width: calc(100vw - 36px);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 12px 8px;
+}
+#nowplaying {
+  flex: 0 0 auto;
+  min-height: 18px;
   transition: opacity 0.25s ease;
 }
-#nowplaying.idle { opacity: 0.0; }
+#nowplaying.idle { min-height: 0; opacity: 0; }
+.list-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex: 0 0 auto;
+  border-top: 1px solid var(--line);
+  padding-top: 9px;
+}
+.list-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.4px;
+  color: var(--ink-dim);
+  font-weight: 600;
+}
+.filters { display: flex; flex-wrap: wrap; gap: 4px; }
+.filters button {
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink-dim);
+  border-radius: 7px;
+  padding: 2px 7px;
+  font-size: 11px;
+  cursor: pointer;
+}
+.filters button.active {
+  color: var(--ink);
+  border-color: var(--accent);
+  background: rgba(79, 209, 255, 0.12);
+}
+#eventlist {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  margin: 0 -6px;
+  padding: 0 6px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(120, 150, 200, 0.4) transparent;
+}
+#eventlist::-webkit-scrollbar { width: 7px; }
+#eventlist::-webkit-scrollbar-thumb {
+  background: rgba(120, 150, 200, 0.35);
+  border-radius: 4px;
+}
+.ev-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 5px 7px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+.ev-row:hover { background: rgba(120, 150, 200, 0.1); }
+.ev-row.active {
+  background: rgba(79, 209, 255, 0.12);
+  border-color: rgba(79, 209, 255, 0.35);
+}
+.ev-row .ev-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex: 0 0 auto;
+  align-self: center;
+  box-shadow: 0 0 7px currentColor;
+}
+.ev-row .ev-body { flex: 1 1 auto; min-width: 0; }
+.ev-row .ev-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 12px;
+  color: var(--ink);
+}
+.ev-row .ev-sub {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 11px;
+  color: var(--ink-dim);
+}
+.ev-row .ev-time {
+  flex: 0 0 auto;
+  font-size: 10px;
+  color: var(--ink-dim);
+  font-variant-numeric: tabular-nums;
+}
+.ev-empty { color: var(--ink-dim); font-size: 12px; padding: 8px 7px; }
 .np-kind {
   display: inline-block;
   font-size: 10px;

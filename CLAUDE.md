@@ -13,13 +13,32 @@ everything else is derived from it:
 ```
 git repos / folders
   → scan/        deterministic `git log --numstat` parser + repo discovery
+  → activity/    deterministic, REDACTING parsers for machine activity (optional, PRIVATE)
   → classify/    path → ChangeKind (fixed precedence) + versioned colour palette
-  → graph/       repo·branch·committer nodes, edges, one pulse per commit + layout
+  → graph/       repo·branch·committer + server·loop·bot·agent nodes, edges, pulses + layout
   → timeline/    time bounds
   → export/      canonical JSON (sorted keys, SHA-256 content_hash) + self-contained HTML
   → dashboard/   dependency-free Canvas engine (assets/) + a static server
   → core/model.py  HeartbeatDocument (mirrors schema/heartbeat.schema.json)
 ```
+
+A `Pulse` is **any activity event** (its `event` discriminator is one of
+`commit`/`sync`/`loop_run`/`message`/`session`/`access`), not just a commit;
+`category` is its palette key (a change-kind for commits, an event category
+otherwise). `build_graph(repos, events)` emits the git-only graph when `events`
+is empty (unchanged behaviour) and the server-centric machine graph otherwise.
+
+## Machine activity (`activity/`) is PRIVATE and must redact
+
+The `activity/` source reads real machine logs (loop runs, git remote-tracking
+reflogs for syncs, a Telegram audit log, `.sessions.json`). **Never let a secret
+reach a document:** all free text goes through `activity/redact.py` (masks
+`olp_…`/GitHub/Slack tokens, URL credentials, e-mails), remote hosts are
+surfaced via `host_of()` without their token, and loop-run *bodies* are never
+read into events. The real-activity artifact is **private** — the CLI writes it
+to a gitignored `heartbeat-private/` and prints a do-not-publish notice; the
+public `examples/` demo is **synthetic** (`examples/generate_demo.py`). When you
+touch a parser, keep the redaction and add a token-leak assertion to its test.
 
 **Determinism is a hard requirement.** Models are frozen / `extra="forbid"`;
 every emitted collection is sorted (pulses by `(t, id)`, nodes/edges by `id`);
@@ -67,9 +86,10 @@ edit `app.js`, keep it that way and re-run `node --check`.
 - Version any new frozen resource in `versions.py` and stamp it into the
   document.
 
-## Roadmap (don't break the reserved kinds)
+## The node/edge/event kinds (all now in use)
 
-`NodeKind` already names `server`, `agent`, `bot`, `loop`, and `EdgeKind`
-names `accessed`, `runs_on`, `notifies`. These are intentional placeholders for
-the server node, Claude agents, Telegram bot and recurring loops — see
-`docs/roadmap.md`. Extend along these seams rather than reshaping the schema.
+`NodeKind` `server`/`agent`/`bot`/`loop`, `EdgeKind` `accessed`/`runs_on`/
+`notifies`, and the whole `EventKind` enum are **emitted** by the `activity/`
+source — no longer placeholders (see `docs/roadmap.md`). Extend along these
+seams (add a parser → `ActivityEvent`s → `build_graph`) rather than reshaping
+the schema; version any new frozen resource in `versions.py` and stamp it in.

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from scienceheartbeat.activity.model import ActivityEvent
 from scienceheartbeat.export import build_document, dumps, render_html
 from scienceheartbeat.export.json_io import content_hash
 from scienceheartbeat.scan import scan_repo
@@ -9,6 +10,17 @@ from scienceheartbeat.scan import scan_repo
 
 def _doc(repo: Path):
     return build_document([scan_repo(repo)])
+
+
+def test_activity_document_is_byte_identical(
+    sample_repo: Path, sample_events: list[ActivityEvent]
+) -> None:
+    def build() -> str:
+        return dumps(
+            build_document([scan_repo(sample_repo)], sample_events, owner_email="ada@example.com")
+        )
+
+    assert build() == build()
 
 
 def test_document_json_is_byte_identical(sample_repo: Path) -> None:

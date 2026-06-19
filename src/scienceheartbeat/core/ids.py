@@ -12,11 +12,16 @@ import hashlib
 import re
 
 __all__ = [
+    "agent_id",
+    "bot_id",
     "branch_id",
     "committer_id",
     "edge_id",
+    "event_pulse_id",
+    "loop_id",
     "pulse_id",
     "repo_id",
+    "server_id",
     "short_sha",
     "slug",
 ]
@@ -70,6 +75,44 @@ def pulse_id(repo_name: str, sha: str) -> str:
     """Stable id for a pulse (one commit in one repo)."""
 
     return f"pulse:{slug(repo_name)}:{short_sha(sha)}"
+
+
+def server_id(name: str = "server") -> str:
+    """Stable node id for the machine everything runs on."""
+
+    return f"server:{slug(name)}"
+
+
+def loop_id(name: str) -> str:
+    """Stable node id for a recurring (cron-like) loop."""
+
+    return f"loop:{slug(name)}"
+
+
+def bot_id(name: str = "telegram") -> str:
+    """Stable node id for a messaging bot."""
+
+    return f"bot:{slug(name)}"
+
+
+def agent_id(key: str) -> str:
+    """Stable node id for an agent / remote session.
+
+    ``key`` is hashed so a long or sensitive handle (e.g. a session uuid) does
+    not leak into the id while staying a fixed, stable shape.
+    """
+
+    return f"agent:{_digest(key)}"
+
+
+def event_pulse_id(event: str, key: str) -> str:
+    """Stable id for a non-commit activity pulse.
+
+    ``key`` uniquely identifies the event within its kind (a log line, a sync
+    reflog entry, a session id). It is hashed so the id is compact and stable.
+    """
+
+    return f"event:{slug(event)}:{_digest(key, 16)}"
 
 
 def edge_id(kind: str, source: str, target: str) -> str:

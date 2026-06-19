@@ -21,3 +21,9 @@ site/
 
 # Default CLI output directory.
 heartbeat-dashboard/
+
+# Private machine-activity artifacts must never be committed/published.
+# (`--activity` defaults to writing under heartbeat-private/.)
+heartbeat-private/
+*.private.json
+*.private.html

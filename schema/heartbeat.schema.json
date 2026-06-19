@@ -49,6 +49,10 @@
       "type": "string",
       "enum": ["authored", "branch_of", "accessed", "runs_on", "notifies"]
     },
+    "eventKind": {
+      "type": "string",
+      "enum": ["commit", "sync", "loop_run", "message", "session", "access"]
+    },
     "source": {
       "type": "object",
       "additionalProperties": false,
@@ -99,16 +103,20 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "id", "t", "node", "path", "kind", "color", "intensity",
-        "source", "source_id", "repo", "branch", "title", "ref",
+        "id", "t", "event", "node", "path", "category", "color", "intensity",
+        "source", "source_id", "repo", "branch", "title", "detail", "ref",
         "insertions", "deletions", "files_changed", "kinds"
       ],
       "properties": {
         "id": { "type": "string" },
         "t": { "type": "integer" },
+        "event": { "$ref": "#/$defs/eventKind" },
         "node": { "type": "string" },
         "path": { "type": "array", "items": { "type": "string" } },
-        "kind": { "$ref": "#/$defs/changeKind" },
+        "category": {
+          "type": "string",
+          "description": "Palette key: a changeKind value for commits, or an event category (push/pull/loop-ok/loop-fail/msg-in/msg-out/session/access) for activity."
+        },
         "color": { "type": "string" },
         "intensity": { "type": "number", "minimum": 0, "maximum": 1 },
         "source": { "type": "string" },
@@ -116,6 +124,7 @@
         "repo": { "type": "string" },
         "branch": { "type": "string" },
         "title": { "type": "string" },
+        "detail": { "type": "string" },
         "ref": { "type": "string" },
         "insertions": { "type": "integer", "minimum": 0 },
         "deletions": { "type": "integer", "minimum": 0 },

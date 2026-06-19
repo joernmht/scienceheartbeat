@@ -25,6 +25,27 @@
   var playBtn = document.getElementById("playpause");
   var speedsEl = document.getElementById("speeds");
   var scrub = document.getElementById("scrub");
+  var eventListEl = document.getElementById("eventlist");
+  var filtersEl = document.getElementById("filters");
+
+  // --- event-type metadata (label + sidebar filter group) ----------------
+  var EVENT_META = {
+    commit: { label: "commit", group: "commits" },
+    sync: { label: "sync", group: "syncs" },
+    loop_run: { label: "loop", group: "loops" },
+    message: { label: "message", group: "messages" },
+    session: { label: "session", group: "sessions" },
+    access: { label: "access", group: "sessions" },
+  };
+  // Filter chips: id -> matching event kinds (null = all).
+  var FILTERS = [
+    { id: "all", label: "all", kinds: null },
+    { id: "commits", label: "commits", kinds: ["commit"] },
+    { id: "syncs", label: "syncs", kinds: ["sync"] },
+    { id: "loops", label: "loops", kinds: ["loop_run"] },
+    { id: "messages", label: "msgs", kinds: ["message"] },
+    { id: "sessions", label: "sessions", kinds: ["session", "access"] },
+  ];
 
   // --- deterministic PRNG (mulberry32) for purely-cosmetic twinkle -------
   function mulberry32(a) {
@@ -54,7 +75,9 @@
   var hasPulses = pulses.length > 0;
   if (!hasPulses) {
     emptyEl.style.display = "flex";
-    emptyEl.textContent = "No commits found in the scanned sources yet.";
+    emptyEl.textContent = "No activity found in the scanned sources yet.";
+    var sb = document.getElementById("sidebar");
+    if (sb) sb.style.display = "none";
   }
 
   // playback state
@@ -138,6 +161,16 @@
     return Math.exp(-(dt - RISE) / TAU);
   }
 
+  // Per-node weight along a pulse path: source dim, destination bright, any
+  // waypoint brightest. Works for any path length (commits travel 3 nodes,
+  // activity events 1-2).
+  function pathWeight(k, n) {
+    if (n <= 1) return 1.0;
+    if (k === 0) return 0.6;
+    if (k === n - 1) return 0.9;
+    return 1.0;
+  }
+
   // accumulate per-node glow + blended colour; collect travelling pulses
   function computeState() {
     var glow = {};      // id -> intensity
@@ -157,10 +190,9 @@
       if (act < 0.001) continue;
       var c = rgb(p.color);
       var nodes = p.path;
-      var wts = [0.6, 1.0, 0.8]; // committer, branch, repo
       for (var k = 0; k < nodes.length; k++) {
         var id = nodes[k];
-        var a = act * (wts[k] || 0.7);
+        var a = act * pathWeight(k, nodes.length);
         glow[id] = (glow[id] || 0) + a;
         weight[id] = (weight[id] || 0) + a;
         var acc = col[id] || (col[id] = [0, 0, 0]);
@@ -210,10 +242,28 @@
   // --- main render -------------------------------------------------------
   var DEFAULT = [120, 150, 200];
 
+  // Idle core tint by node kind, so machine nodes read distinctly even when
+  // they are not glowing.
+  var KIND_TINT = {
+    server: [255, 209, 102],
+    loop: [126, 231, 135],
+    bot: [92, 200, 255],
+    agent: [229, 140, 255],
+    repo: [200, 215, 240],
+    branch: [160, 190, 230],
+    committer: [196, 210, 235],
+  };
+  // Kinds whose labels are always drawn (the rest only when active/hovered).
+  var ALWAYS_LABEL = { server: 1, repo: 1, branch: 1, loop: 1, bot: 1 };
+
   function nodeRadius(node) {
-    if (node.kind === "repo") return 13;
-    if (node.kind === "branch") return 9;
-    return 6;
+    switch (node.kind) {
+      case "server": return 16;
+      case "repo": return 13;
+      case "loop": case "bot": case "agent": return 9;
+      case "branch": return 8;
+      default: return 6; // committer
+    }
   }
 
   function render(now) {
@@ -255,12 +305,15 @@
       ctx.fill();
     }
 
-    // travelling light along committer -> branch -> repo
+    // travelling light along the pulse path (any number of segments)
     for (var t = 0; t < state.travels.length; t++) {
       var tr = state.travels[t];
       var path = tr.p.path;
-      var seg = tr.prog < 0.5 ? 0 : 1;
-      var local = tr.prog < 0.5 ? tr.prog * 2 : (tr.prog - 0.5) * 2;
+      var segs = path.length - 1;
+      if (segs <= 0) continue; // single-node path: glow only, no travel
+      var fseg = tr.prog * segs;
+      var seg = Math.min(segs - 1, Math.floor(fseg));
+      var local = fseg - seg;
       var from = nodeById[path[seg]], to = nodeById[path[seg + 1]];
       if (!from || !to) continue;
       var pf = toScreen(from.x, from.y), pt = toScreen(to.x, to.y);
@@ -287,19 +340,21 @@
       var cc2 = nodeColor(nd.id, state, DEFAULT);
       var rad = nodeRadius(nd);
       // core
+      var tint = KIND_TINT[nd.kind] || [200, 215, 240];
       ctx.beginPath();
       ctx.arc(p2[0], p2[1], rad, 0, 6.2832);
-      ctx.fillStyle = gg > 0.02 ? rgba(cc2, 0.95) : rgba([200, 215, 240], 0.55);
+      ctx.fillStyle = gg > 0.02 ? rgba(cc2, 0.95) : rgba(tint, 0.55);
       ctx.fill();
       ctx.lineWidth = 1.5;
       ctx.strokeStyle = rgba([255, 255, 255], 0.35 + Math.min(0.5, gg * 0.5));
       ctx.stroke();
-      // labels: repos/branches always; committers when active or hovered
-      var showLabel = nd.kind !== "committer" || gg > 0.05 || hovered === nd.id;
+      // labels: structural + machine nodes always; committers/agents on demand
+      var showLabel = ALWAYS_LABEL[nd.kind] || gg > 0.05 || hovered === nd.id;
       if (showLabel) {
-        ctx.font = (nd.kind === "repo" ? "600 13px " : "12px ") + "ui-sans-serif, system-ui, sans-serif";
+        var bigLabel = nd.kind === "repo" || nd.kind === "server";
+        ctx.font = (bigLabel ? "600 13px " : "12px ") + "ui-sans-serif, system-ui, sans-serif";
         ctx.textAlign = "center";
-        ctx.fillStyle = rgba([232, 238, 252], nd.kind === "committer" ? 0.65 : 0.9);
+        ctx.fillStyle = rgba([232, 238, 252], (nd.kind === "committer" || nd.kind === "agent") ? 0.65 : 0.9);
         ctx.shadowColor = "rgba(0,0,0,0.8)";
         ctx.shadowBlur = 6;
         ctx.fillText(nd.label, p2[0], p2[1] + rad + 15);
@@ -397,15 +452,13 @@
     if (f && state.freshDt < TAU * 1.5) {
       if (f.id !== lastFreshId) {
         lastFreshId = f.id;
-        var kindColor = DATA.palette[f.kind] || "#9fb0c0";
+        var catColor = DATA.palette[f.category] || "#9fb0c0";
         nowEl.innerHTML =
-          '<span class="np-kind" style="background:' + kindColor + '">' + f.kind + "</span>" +
+          '<span class="np-kind" style="background:' + catColor + '">' + escapeHtml(f.category) +
+          "</span>" +
           '<div class="np-title">' + escapeHtml(f.title) + "</div>" +
-          '<div class="np-meta"><b>' + escapeHtml(f.source) + "</b> &middot; " +
-          escapeHtml(nodeById[f.repo] ? nodeById[f.repo].label : "") + " / " +
-          escapeHtml(nodeById[f.branch] ? nodeById[f.branch].label : "") +
-          ' &middot; <span style="font-family:ui-monospace,monospace">' + f.ref.slice(0, 7) + "</span>" +
-          " &middot; +" + f.insertions + " −" + f.deletions + "</div>";
+          '<div class="np-meta">' + metaLine(f) + "</div>";
+        setActiveRow(f.id);
       }
       nowEl.classList.remove("idle");
     } else {
@@ -414,28 +467,143 @@
     }
   }
 
+  // The detail line for a pulse — commit churn for commits, the event's own
+  // redacted detail for everything else.
+  function metaLine(p) {
+    var source = "<b>" + escapeHtml(p.source) + "</b>";
+    if (p.event === "commit") {
+      var repoL = nodeById[p.repo] ? nodeById[p.repo].label : "";
+      var branchL = nodeById[p.branch] ? nodeById[p.branch].label : "";
+      return source + " &middot; " + escapeHtml(repoL) + " / " + escapeHtml(branchL) +
+        ' &middot; <span style="font-family:ui-monospace,monospace">' + escapeHtml(p.ref.slice(0, 7)) +
+        "</span> &middot; +" + p.insertions + " −" + p.deletions;
+    }
+    var bits = [source];
+    if (p.repo && nodeById[p.repo]) bits.push(escapeHtml(nodeById[p.repo].label));
+    if (p.detail) bits.push(escapeHtml(p.detail));
+    return bits.join(" &middot; ");
+  }
+
   function escapeHtml(s) {
     return String(s).replace(/[&<>"']/g, function (c) {
       return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
     });
   }
 
-  // --- legend ------------------------------------------------------------
+  // --- legend (change kinds + activity categories) -----------------------
+  var catCounts = {};
+  var eventCounts = {};
+  pulses.forEach(function (p) {
+    catCounts[p.category] = (catCounts[p.category] || 0) + 1;
+    eventCounts[p.event] = (eventCounts[p.event] || 0) + 1;
+  });
   (function buildLegend() {
-    var counts = {};
-    pulses.forEach(function (p) { counts[p.kind] = (counts[p.kind] || 0) + 1; });
-    var order = ["code", "tests", "docs", "build", "deps", "config", "data", "assets", "other"];
-    var html = "<h4>changes</h4>";
-    order.forEach(function (k) {
-      if (!counts[k]) return;
-      var col = DATA.palette[k] || "#9fb0c0";
-      html += '<div class="legend-row"><span class="sw" style="background:' + col +
-        ";color:" + col + '"></span><span class="nm">' + k + '</span><span class="ct">' +
-        counts[k] + "</span></div>";
-    });
+    var changeOrder = ["code", "tests", "docs", "build", "deps", "config", "data", "assets", "other"];
+    var eventOrder = ["push", "pull", "loop-ok", "loop-fail", "msg-in", "msg-out", "session", "access"];
+    function rows(keys) {
+      var h = "";
+      keys.forEach(function (k) {
+        if (!catCounts[k]) return;
+        var col = DATA.palette[k] || "#9fb0c0";
+        h += '<div class="legend-row"><span class="sw" style="background:' + col +
+          ";color:" + col + '"></span><span class="nm">' + k + '</span><span class="ct">' +
+          catCounts[k] + "</span></div>";
+      });
+      return h;
+    }
+    var changeHtml = rows(changeOrder), eventHtml = rows(eventOrder);
+    var html = "";
+    if (changeHtml) html += "<h4>changes</h4>" + changeHtml;
+    if (eventHtml) html += "<h4>activity</h4>" + eventHtml;
     legendEl.innerHTML = html;
     if (!hasPulses) legendEl.style.display = "none";
   })();
+
+  // --- activity / commit list (the side rail) ----------------------------
+  var activeFilter = "all";
+  var rowById = {};
+  var activeRowId = null;
+
+  function shortTime(t) {
+    var iso = new Date(t * 1000).toISOString();
+    return iso.slice(5, 10) + " " + iso.slice(11, 16);
+  }
+
+  function eventSub(p) {
+    var parts = [p.source];
+    if (p.repo && nodeById[p.repo]) parts.push(nodeById[p.repo].label);
+    if (p.event === "commit") parts.push("+" + p.insertions + " −" + p.deletions);
+    else if (p.detail) parts.push(p.detail);
+    return parts.join(" · ");
+  }
+
+  function seekTo(t) {
+    cursor = t;
+    playing = false;
+    playBtn.textContent = "▶";
+  }
+
+  function setActiveRow(id) {
+    if (activeRowId === id) return;
+    if (activeRowId && rowById[activeRowId]) rowById[activeRowId].classList.remove("active");
+    activeRowId = id;
+    var row = rowById[id];
+    if (!row) return;
+    row.classList.add("active");
+    if (playing) {
+      var top = row.offsetTop, hh = row.offsetHeight;
+      if (top < eventListEl.scrollTop || top + hh > eventListEl.scrollTop + eventListEl.clientHeight) {
+        eventListEl.scrollTop = top - eventListEl.clientHeight / 2 + hh / 2;
+      }
+    }
+  }
+
+  function buildEventList() {
+    var kinds = null;
+    FILTERS.forEach(function (f) { if (f.id === activeFilter) kinds = f.kinds; });
+    rowById = {};
+    var frag = document.createDocumentFragment();
+    var shown = 0;
+    for (var i = pulses.length - 1; i >= 0; i--) {
+      var p = pulses[i];
+      if (kinds && kinds.indexOf(p.event) === -1) continue;
+      shown++;
+      var row = document.createElement("div");
+      row.className = "ev-row";
+      var col = DATA.palette[p.category] || "#9fb0c0";
+      row.innerHTML =
+        '<span class="ev-dot" style="background:' + col + ";color:" + col + '"></span>' +
+        '<div class="ev-body"><div class="ev-title">' + escapeHtml(p.title) + "</div>" +
+        '<div class="ev-sub">' + escapeHtml(eventSub(p)) + "</div></div>" +
+        '<span class="ev-time">' + shortTime(p.t) + "</span>";
+      (function (pp, rr) {
+        rr.addEventListener("click", function () { seekTo(pp.t); setActiveRow(pp.id); });
+      })(p, row);
+      rowById[p.id] = row;
+      frag.appendChild(row);
+    }
+    eventListEl.innerHTML = "";
+    if (!shown) eventListEl.innerHTML = '<div class="ev-empty">no events</div>';
+    else eventListEl.appendChild(frag);
+    if (activeRowId && rowById[activeRowId]) rowById[activeRowId].classList.add("active");
+  }
+
+  (function buildFilters() {
+    FILTERS.forEach(function (f) {
+      if (f.kinds && !f.kinds.some(function (k) { return eventCounts[k]; })) return; // skip empty
+      var b = document.createElement("button");
+      b.textContent = f.label;
+      if (f.id === activeFilter) b.className = "active";
+      b.addEventListener("click", function () {
+        activeFilter = f.id;
+        Array.prototype.forEach.call(filtersEl.children, function (c) { c.classList.remove("active"); });
+        b.classList.add("active");
+        buildEventList();
+      });
+      filtersEl.appendChild(b);
+    });
+  })();
+  buildEventList();
 
   // --- speed controls ----------------------------------------------------
   (function buildSpeeds() {
@@ -453,7 +621,7 @@
     var span = document.createElement("span");
     span.className = "span";
     var days = Math.round((T1 - T0) / 86400);
-    span.textContent = hasPulses ? (pulses.length + " commits · " + days + " days") : "";
+    span.textContent = hasPulses ? (pulses.length + " events · " + days + " days") : "";
     speedsEl.parentNode.appendChild(span);
   })();
 
@@ -522,9 +690,11 @@
     }
     hovered = best ? best.id : null;
     if (best) {
-      var cnt = pulses.filter(function (p) { return p.node === best.id || p.source_id === best.id || p.repo === best.id; }).length;
+      var cnt = pulses.filter(function (p) {
+        return p.node === best.id || p.source_id === best.id || (p.path && p.path.indexOf(best.id) !== -1);
+      }).length;
       tooltip.innerHTML = '<div class="tt-label">' + escapeHtml(best.label) + '</div>' +
-        '<div class="tt-kind">' + best.kind + (cnt ? " · " + cnt + " commits" : "") + "</div>";
+        '<div class="tt-kind">' + best.kind + (cnt ? " · " + cnt + " events" : "") + "</div>";
       tooltip.style.left = mx + "px";
       tooltip.style.top = my + "px";
       tooltip.hidden = false;
