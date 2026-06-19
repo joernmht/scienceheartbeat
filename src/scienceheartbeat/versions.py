@@ -3,8 +3,7 @@
 Bumping one of these constants signals that a derived artifact may change even
 though the input repository history did not. Stamping them into the
 :class:`~scienceheartbeat.core.model.HeartbeatDocument` keeps old artifacts
-self-describing and reproducible, mirroring the convention used in the sibling
-``lp2graph`` project.
+self-describing and reproducible.
 """
 
 from __future__ import annotations

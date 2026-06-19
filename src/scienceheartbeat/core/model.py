@@ -166,9 +166,8 @@ class SourceInfo(_Frozen):
 class HeartbeatDocument(_Frozen):
     """The complete, deterministic artifact the dashboard consumes.
 
-    Resource versions are stamped in for reproducibility, mirroring the
-    convention used across the sibling ``lp2graph`` project. ``content_hash``
-    is a SHA-256 over the canonical JSON of every other field; see
+    Resource versions are stamped in for reproducibility. ``content_hash`` is a
+    SHA-256 over the canonical JSON of every other field; see
     :func:`scienceheartbeat.export.json_io.content_hash`.
     """
 

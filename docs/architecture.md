@@ -1,8 +1,7 @@
 # Architecture
 
-`scienceheartbeat` follows the same philosophy as its sibling project
-`lp2graph`: there is **one canonical model**, and everything else is derived
-from it on demand. The canonical model is the frozen pydantic
+`scienceheartbeat` is built around **one canonical model**; everything else is
+derived from it on demand. The canonical model is the frozen pydantic
 `HeartbeatDocument` in `core/model.py`, which mirrors
 `schema/heartbeat.schema.json`.
 
