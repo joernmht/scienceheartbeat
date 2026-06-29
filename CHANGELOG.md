@@ -8,6 +8,26 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- **TUD CRO chair corporate design**: the dashboard now wears the Chair of
+  Railway Operations identity — TUD Dunkelblau field with a Türkis accent and
+  the chair wordmark logo in the top bar. The Canvas engine reads its colours
+  from CSS custom properties (`--canvas-*`, `--*-rgb`, `--accent-rgb`), so the
+  glow, starfield and ECG follow the device appearance: dark by default, a
+  light variant under `prefers-color-scheme: light` (the canvas keeps a deep
+  field because the glow is additive and would vanish on white). The logo
+  flips white on the dark field, brand-blue on light.
+- **Mobile layout**: the three fixed panels no longer overlap on phones. Under
+  720px the legend becomes a tap-to-show overlay (`key` button), the activity
+  rail becomes a collapsible bottom drawer (`activity` button / drag handle),
+  and the timeline goes edge-to-edge and compact with safe-area insets. The
+  graph is now touch-navigable — one-finger pan, two-finger pinch-zoom, and
+  touch-scrubbing on the ECG.
+- **Trailing-range view**: a `7d` / `30d` / `all` toggle in the timeline
+  controls narrows the visible window to the last week/month without
+  rescanning. The cursor, ECG, scrub, legend totals and activity list all
+  recompute for the selected range; the span label reads e.g. "42 events ·
+  last 7d".
+
 - **Machine activity** (`scienceheartbeat.activity`): the heartbeat now beats
   for the whole research machine, not just commits. Deterministic, redacting
   parsers turn four new signals into events — recurring **loop runs**

@@ -27,6 +27,40 @@
   var scrub = document.getElementById("scrub");
   var eventListEl = document.getElementById("eventlist");
   var filtersEl = document.getElementById("filters");
+  var rangesEl = document.getElementById("ranges");
+  var legendToggle = document.getElementById("legendToggle");
+  var listToggle = document.getElementById("listToggle");
+  var drawerHandle = document.getElementById("drawerHandle");
+
+  // --- theme tokens (read from CSS so the canvas follows the device theme) -
+  // The TUD Chair design lives in style.css; the Canvas engine reads the same
+  // custom properties here so the glow / starfield / ECG recolour with the
+  // light/dark appearance instead of carrying hard-coded hex.
+  function parseRgb(s, fallback) {
+    var p = String(s).split(",");
+    if (p.length < 3) return fallback;
+    return [parseInt(p[0], 10) || 0, parseInt(p[1], 10) || 0, parseInt(p[2], 10) || 0];
+  }
+  var THEME;
+  function readTheme() {
+    var cs = getComputedStyle(document.documentElement);
+    function v(name, fallback) {
+      var got = cs.getPropertyValue(name).trim();
+      return got || fallback;
+    }
+    THEME = {
+      bg0: v("--canvas-bg-0", "#0b2a63"),
+      bg1: v("--canvas-bg-1", "#00103a"),
+      star: parseRgb(v("--star-rgb", "130,175,225"), [130, 175, 225]),
+      edge: parseRgb(v("--edge-rgb", "90,150,185"), [90, 150, 185]),
+      node: parseRgb(v("--node-rgb", "140,170,215"), [140, 170, 215]),
+      accent: parseRgb(v("--accent-rgb", "54,184,191"), [54, 184, 191]),
+    };
+  }
+  readTheme();
+  var darkMq = window.matchMedia("(prefers-color-scheme: dark)");
+  if (darkMq.addEventListener) darkMq.addEventListener("change", readTheme);
+  else if (darkMq.addListener) darkMq.addListener(readTheme);
 
   // --- event-type metadata (label + sidebar filter group) ----------------
   var EVENT_META = {
@@ -63,14 +97,14 @@
   var pulses = DATA.pulses; // sorted by (t, id)
   var pulseTimes = pulses.map(function (p) { return p.t; });
 
-  var T0 = DATA.t_min, T1 = DATA.t_max;
-  var span = Math.max(1, T1 - T0);
-  var TAU = Math.max(span * 0.035, 1);          // glow decay (data-seconds)
-  var RISE = TAU * 0.18;                          // onset time
-  var WINDOW = TAU * 6;                            // how far back a pulse matters
-  var TRAVEL = Math.max(TAU * 1.1, span * 0.02);   // edge travel duration
-  var TAIL = TAU * 5;                              // post-end fade before looping
-  var DOMAIN_END = T1 + TAIL;
+  // Absolute bounds of the data; the *view* bounds below can be narrowed to a
+  // trailing range (e.g. the last week) without rescanning.
+  var FULL_T0 = DATA.t_min, FULL_T1 = DATA.t_max;
+  var DAY = 86400;
+
+  // View bounds + derived animation constants — all (re)set by applyRange().
+  var T0, T1, span, TAU, RISE, WINDOW, TRAVEL, TAIL, DOMAIN_END;
+  var rangeDays = null;                            // null = all time
 
   var hasPulses = pulses.length > 0;
   if (!hasPulses) {
@@ -80,11 +114,11 @@
     if (sb) sb.style.display = "none";
   }
 
-  // playback state
-  var cursor = T0;
+  // playback state (cursor / baseSpeed are initialised by applyRange below)
+  var cursor = FULL_T0;
   var playing = hasPulses;
   var multiplier = 1;
-  var baseSpeed = span / 26; // play the whole timeline in ~26s at 1x
+  var baseSpeed = 1; // recomputed per range: play the whole window in ~26s at 1x
   var lastFrame = 0;
 
   // view transform (world -> screen)
@@ -93,6 +127,7 @@
 
   // --- sizing ------------------------------------------------------------
   function resize() {
+    readTheme();   // appearance / token changes are cheap to re-read here
     var dpr = Math.min(window.devicePixelRatio || 1, 2);
     stage.width = Math.floor(window.innerWidth * dpr);
     stage.height = Math.floor(window.innerHeight * dpr);
@@ -183,6 +218,7 @@
     var end = lowerBound(pulseTimes, cursor + 1e-6);
     for (var i = start; i < end; i++) {
       var p = pulses[i];
+      if (p.t < T0) continue; // narrowed range: ignore pulses before the window
       var dt = cursor - p.t;
       if (dt < 0) continue;
       var env = envelope(dt);
@@ -223,15 +259,15 @@
   function drawBackground(now) {
     var w = window.innerWidth, h = window.innerHeight;
     var g = ctx.createRadialGradient(w / 2, h * 0.42, 40, w / 2, h * 0.42, Math.max(w, h) * 0.8);
-    g.addColorStop(0, "#0b1326");
-    g.addColorStop(1, "#05080f");
+    g.addColorStop(0, THEME.bg0);
+    g.addColorStop(1, THEME.bg1);
     ctx.fillStyle = g;
     ctx.fillRect(0, 0, w, h);
     ctx.globalCompositeOperation = "lighter";
     for (var i = 0; i < stars.length; i++) {
       var s = stars[i];
       var tw = 0.35 + 0.35 * (0.5 + 0.5 * Math.sin(now * 0.0008 * s.sp + s.ph));
-      ctx.fillStyle = rgba([150, 180, 230], tw * 0.5);
+      ctx.fillStyle = rgba(THEME.star, tw * 0.5);
       ctx.beginPath();
       ctx.arc(s.x * w, s.y * h, s.r, 0, 6.2832);
       ctx.fill();
@@ -240,8 +276,6 @@
   }
 
   // --- main render -------------------------------------------------------
-  var DEFAULT = [120, 150, 200];
-
   // Idle core tint by node kind, so machine nodes read distinctly even when
   // they are not glowing.
   var KIND_TINT = {
@@ -279,7 +313,7 @@
       if (!a || !b) continue;
       var pa = toScreen(a.x, a.y), pb = toScreen(b.x, b.y);
       var lit = Math.min(1, (state.glow[ed.source] || 0) + (state.glow[ed.target] || 0));
-      ctx.strokeStyle = rgba([120, 150, 210], 0.06 + lit * 0.18);
+      ctx.strokeStyle = rgba(THEME.edge, 0.06 + lit * 0.18);
       ctx.beginPath();
       ctx.moveTo(pa[0], pa[1]);
       ctx.lineTo(pb[0], pb[1]);
@@ -293,7 +327,7 @@
       var g = Math.min(1.6, state.glow[n.id] || 0);
       if (g <= 0.002) continue;
       var pos = toScreen(n.x, n.y);
-      var c = nodeColor(n.id, state, DEFAULT);
+      var c = nodeColor(n.id, state, THEME.node);
       var R = nodeRadius(n) + 8 + g * 46;
       var grad = ctx.createRadialGradient(pos[0], pos[1], 0, pos[0], pos[1], R);
       grad.addColorStop(0, rgba(c, Math.min(0.9, 0.25 + g * 0.6)));
@@ -337,7 +371,7 @@
       var nd = DATA.nodes[j];
       var p2 = toScreen(nd.x, nd.y);
       var gg = state.glow[nd.id] || 0;
-      var cc2 = nodeColor(nd.id, state, DEFAULT);
+      var cc2 = nodeColor(nd.id, state, THEME.node);
       var rad = nodeRadius(nd);
       // core
       var tint = KIND_TINT[nd.kind] || [200, 215, 240];
@@ -378,9 +412,10 @@
     var domKind = new Array(w);
     var max = 0.0001;
 
-    // accumulate (deterministic; pure function of pulses)
+    // accumulate (deterministic; pure function of pulses in the view window)
     for (var i = 0; i < pulses.length; i++) {
       var p = pulses[i];
+      if (p.t < T0) continue; // narrowed range: ignore pulses before the window
       var px = ((p.t - T0) / dom) * w;
       var rad = (kernel / dom) * w;
       var x0 = Math.max(0, Math.floor(px - rad));
@@ -395,7 +430,7 @@
     for (var m = 0; m < w; m++) if (vals[m] > max) max = vals[m];
 
     // baseline
-    ectx.strokeStyle = "rgba(120,150,200,0.16)";
+    ectx.strokeStyle = rgba(THEME.edge, 0.18);
     ectx.lineWidth = 1;
     ectx.beginPath(); ectx.moveTo(0, mid); ectx.lineTo(w, mid); ectx.stroke();
 
@@ -408,8 +443,8 @@
     }
     ectx.lineTo(w, mid);
     var fg = ectx.createLinearGradient(0, 0, 0, mid);
-    fg.addColorStop(0, "rgba(79,209,255,0.30)");
-    fg.addColorStop(1, "rgba(79,209,255,0.02)");
+    fg.addColorStop(0, rgba(THEME.accent, 0.3));
+    fg.addColorStop(1, rgba(THEME.accent, 0.02));
     ectx.fillStyle = fg;
     ectx.fill();
 
@@ -491,13 +526,26 @@
   }
 
   // --- legend (change kinds + activity categories) -----------------------
-  var catCounts = {};
-  var eventCounts = {};
+  // Full-range event counts drive which filter chips exist (so a chip never
+  // disappears mid-session); the windowed `catCounts` drive the legend totals,
+  // which reflect the currently selected time range.
+  var fullEventCounts = {};
   pulses.forEach(function (p) {
-    catCounts[p.category] = (catCounts[p.category] || 0) + 1;
-    eventCounts[p.event] = (eventCounts[p.event] || 0) + 1;
+    fullEventCounts[p.event] = (fullEventCounts[p.event] || 0) + 1;
   });
-  (function buildLegend() {
+  var catCounts = {};
+  var windowCount = 0;
+  function computeCounts() {
+    catCounts = {};
+    windowCount = 0;
+    pulses.forEach(function (p) {
+      if (p.t < T0) return;
+      catCounts[p.category] = (catCounts[p.category] || 0) + 1;
+      windowCount++;
+    });
+  }
+
+  function buildLegend() {
     var changeOrder = ["code", "tests", "docs", "build", "deps", "config", "data", "assets", "other"];
     var eventOrder = ["push", "pull", "loop-ok", "loop-fail", "msg-in", "msg-out", "session", "access"];
     function rows(keys) {
@@ -517,7 +565,7 @@
     if (eventHtml) html += "<h4>activity</h4>" + eventHtml;
     legendEl.innerHTML = html;
     if (!hasPulses) legendEl.style.display = "none";
-  })();
+  }
 
   // --- activity / commit list (the side rail) ----------------------------
   var activeFilter = "all";
@@ -566,6 +614,7 @@
     var shown = 0;
     for (var i = pulses.length - 1; i >= 0; i--) {
       var p = pulses[i];
+      if (p.t < T0) continue; // narrowed range: only events inside the window
       if (kinds && kinds.indexOf(p.event) === -1) continue;
       shown++;
       var row = document.createElement("div");
@@ -590,7 +639,7 @@
 
   (function buildFilters() {
     FILTERS.forEach(function (f) {
-      if (f.kinds && !f.kinds.some(function (k) { return eventCounts[k]; })) return; // skip empty
+      if (f.kinds && !f.kinds.some(function (k) { return fullEventCounts[k]; })) return; // skip empty
       var b = document.createElement("button");
       b.textContent = f.label;
       if (f.id === activeFilter) b.className = "active";
@@ -603,10 +652,11 @@
       filtersEl.appendChild(b);
     });
   })();
-  buildEventList();
 
-  // --- speed controls ----------------------------------------------------
-  (function buildSpeeds() {
+  // --- speed + range controls --------------------------------------------
+  var spanLabelEl = null;
+  var rangeButtons = [];
+  (function buildControls() {
     [0.5, 1, 2, 4].forEach(function (m) {
       var b = document.createElement("button");
       b.textContent = m + "×";
@@ -618,12 +668,49 @@
       });
       speedsEl.appendChild(b);
     });
-    var span = document.createElement("span");
-    span.className = "span";
-    var days = Math.round((T1 - T0) / 86400);
-    span.textContent = hasPulses ? (pulses.length + " events · " + days + " days") : "";
-    speedsEl.parentNode.appendChild(span);
+    // trailing-window presets — "last week" is the headline one
+    [{ d: 7, l: "7d" }, { d: 30, l: "30d" }, { d: null, l: "all" }].forEach(function (r) {
+      var b = document.createElement("button");
+      b.textContent = r.l;
+      b.addEventListener("click", function () { applyRange(r.d); });
+      rangeButtons.push({ btn: b, days: r.d });
+      rangesEl.appendChild(b);
+    });
+    spanLabelEl = document.createElement("span");
+    spanLabelEl.className = "span";
+    speedsEl.parentNode.appendChild(spanLabelEl);
   })();
+
+  function updateSpanLabel() {
+    if (!spanLabelEl) return;
+    if (!hasPulses) { spanLabelEl.textContent = ""; return; }
+    var days = Math.max(1, Math.round(span / DAY));
+    var label = rangeDays != null ? ("last " + rangeDays + "d") : (days + " days");
+    spanLabelEl.textContent = windowCount + " events · " + label;
+  }
+
+  // Narrow (or reset) the visible window to a trailing range and recompute all
+  // range-dependent state: animation constants, cursor, legend, list and ECG.
+  function applyRange(days) {
+    rangeDays = days;
+    T1 = FULL_T1;
+    T0 = days != null ? Math.max(FULL_T0, FULL_T1 - days * DAY) : FULL_T0;
+    span = Math.max(1, T1 - T0);
+    TAU = Math.max(span * 0.035, 1);               // glow decay (data-seconds)
+    RISE = TAU * 0.18;                              // onset time
+    WINDOW = TAU * 6;                               // how far back a pulse matters
+    TRAVEL = Math.max(TAU * 1.1, span * 0.02);      // edge travel duration
+    TAIL = TAU * 5;                                 // post-end fade before looping
+    DOMAIN_END = T1 + TAIL;
+    baseSpeed = span / 26;                          // whole window in ~26s at 1x
+    cursor = T0;
+    computeCounts();
+    buildLegend();
+    buildEventList();
+    updateSpanLabel();
+    rangeButtons.forEach(function (rb) { rb.btn.classList.toggle("active", rb.days === rangeDays); });
+  }
+  applyRange(null);
 
   playBtn.addEventListener("click", function () {
     playing = !playing;
@@ -631,6 +718,23 @@
     if (playing && cursor >= DOMAIN_END) cursor = T0;
   });
   playBtn.textContent = playing ? "❚❚" : "▶";
+
+  // --- mobile chrome toggles ---------------------------------------------
+  // On phones the legend is a tap-to-show overlay and the activity rail is a
+  // bottom drawer; these flip body classes the CSS media query keys off.
+  function toggleBody(cls, btn) {
+    var on = document.body.classList.toggle(cls);
+    if (btn) btn.classList.toggle("active", on);
+  }
+  if (legendToggle) {
+    legendToggle.addEventListener("click", function () { toggleBody("legend-open", legendToggle); });
+  }
+  function openList() {
+    var on = document.body.classList.toggle("list-open");
+    if (listToggle) listToggle.classList.toggle("active", on);
+  }
+  if (listToggle) listToggle.addEventListener("click", openList);
+  if (drawerHandle) drawerHandle.addEventListener("click", openList);
 
   scrub.addEventListener("input", function () {
     var frac = Number(scrub.value) / 1000;
@@ -651,6 +755,8 @@
   ecg.addEventListener("mousedown", function (e) { ecgDown = true; ecgSeek(e.clientX); });
   window.addEventListener("mousemove", function (e) { if (ecgDown) ecgSeek(e.clientX); });
   window.addEventListener("mouseup", function () { ecgDown = false; });
+  ecg.addEventListener("touchstart", function (e) { ecgSeek(e.touches[0].clientX); }, { passive: true });
+  ecg.addEventListener("touchmove", function (e) { e.preventDefault(); ecgSeek(e.touches[0].clientX); }, { passive: false });
 
   // --- pan / zoom + hover ------------------------------------------------
   var hovered = null;
@@ -678,6 +784,49 @@
     userOY += (w2[1] - w[1]) * s;
   }, { passive: false });
   stage.addEventListener("dblclick", function () { userScale = 1; userOX = 0; userOY = 0; });
+
+  // touch: one finger pans the graph, two fingers pinch-zoom around their
+  // midpoint — so the canvas is fully navigable on a phone.
+  var touchDrag = null, pinch = null;
+  function touchMid(t0, t1) { return { x: (t0.clientX + t1.clientX) / 2, y: (t0.clientY + t1.clientY) / 2 }; }
+  function touchDist(t0, t1) {
+    var dx = t0.clientX - t1.clientX, dy = t0.clientY - t1.clientY;
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+  stage.addEventListener("touchstart", function (e) {
+    tooltip.hidden = true;
+    if (e.touches.length === 1) {
+      touchDrag = { x: e.touches[0].clientX - userOX, y: e.touches[0].clientY - userOY };
+      pinch = null;
+    } else if (e.touches.length === 2) {
+      touchDrag = null;
+      pinch = { dist: touchDist(e.touches[0], e.touches[1]), scale: userScale };
+    }
+  }, { passive: true });
+  stage.addEventListener("touchmove", function (e) {
+    if (e.touches.length === 1 && touchDrag) {
+      e.preventDefault();
+      userOX = e.touches[0].clientX - touchDrag.x;
+      userOY = e.touches[0].clientY - touchDrag.y;
+    } else if (e.touches.length === 2 && pinch) {
+      e.preventDefault();
+      var mid = touchMid(e.touches[0], e.touches[1]);
+      var w = toWorld(mid.x, mid.y);
+      var ratio = touchDist(e.touches[0], e.touches[1]) / Math.max(1, pinch.dist);
+      userScale = Math.max(0.3, Math.min(6, pinch.scale * ratio));
+      var w2 = toWorld(mid.x, mid.y);
+      var s = view.fit * userScale;
+      userOX += (w2[0] - w[0]) * s;
+      userOY += (w2[1] - w[1]) * s;
+    }
+  }, { passive: false });
+  stage.addEventListener("touchend", function (e) {
+    if (e.touches.length === 0) { touchDrag = null; pinch = null; }
+    else if (e.touches.length === 1) {
+      pinch = null;
+      touchDrag = { x: e.touches[0].clientX - userOX, y: e.touches[0].clientY - userOY };
+    }
+  });
 
   function hitTest(mx, my) {
     var best = null, bestD = 24 * 24;

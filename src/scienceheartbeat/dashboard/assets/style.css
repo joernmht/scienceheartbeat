@@ -1,13 +1,60 @@
+/* =========================================================================
+   science heartbeat — TUD Chair of Railway Operations (CRO) corporate design.
+
+   Dark (default) : TUD Dunkelblau field, Türkis accent, white chair logo.
+   Light          : light frosted chrome, Türkis accent, blue chair logo.
+   Brand palette  : Türkis #0A777F · Brillantblau #00008C · Orange #C85000 ·
+                    Rot #D20F41 · Violett #7369BE · Dunkelblau #001450.
+
+   The Canvas engine (app.js) is themed too: the `--canvas-*`, `--*-rgb` and
+   `--accent-rgb` tokens below are read at runtime via getComputedStyle, so the
+   glow / starfield / ECG follow the device appearance with no hard-coded hex
+   in the script. The canvas keeps a deep field in both modes because the glow
+   is additive ("lighter") and would vanish on a white background.
+   ========================================================================= */
 :root {
-  --bg-0: #05080f;
-  --bg-1: #0a1020;
-  --ink: #e8eefc;
-  --ink-dim: #8ea0c0;
-  --line: rgba(120, 150, 200, 0.16);
-  --panel: rgba(12, 18, 34, 0.62);
-  --panel-brd: rgba(120, 160, 230, 0.18);
-  --accent: #4fd1ff;
-  --shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+  /* chrome (dark / default) */
+  --ink: #eaf1ff;
+  --ink-dim: #9db4d8;
+  --line: rgba(120, 160, 210, 0.18);
+  --panel: rgba(8, 28, 72, 0.62);
+  --panel-brd: rgba(54, 184, 191, 0.24);
+  --accent: #36b8bf;        /* Türkis (lightened for the dark field) */
+  --accent-soft: color-mix(in srgb, var(--accent) 13%, transparent);
+  --accent-line: color-mix(in srgb, var(--accent) 42%, transparent);
+  --chip-ink: #04161a;      /* dark text on a bright category chip */
+  --shadow: 0 8px 30px rgba(0, 6, 24, 0.5);
+
+  /* canvas engine tokens (read by app.js) */
+  --canvas-bg-0: #0b2a63;   /* inner radial */
+  --canvas-bg-1: #00103a;   /* outer radial — TUD Dunkelblau */
+  --star-rgb: 130, 175, 225;
+  --edge-rgb: 90, 150, 185;
+  --node-rgb: 140, 170, 215;
+  --accent-rgb: 54, 184, 191;
+
+  --bg-0: var(--canvas-bg-1);
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --ink: #0c1f3a;
+    --ink-dim: #566782;
+    --line: rgba(10, 119, 127, 0.22);
+    --panel: rgba(255, 255, 255, 0.74);
+    --panel-brd: rgba(10, 119, 127, 0.30);
+    --accent: #0A777F;      /* Türkis 1 */
+    --chip-ink: #04161a;
+    --shadow: 0 8px 30px rgba(10, 40, 60, 0.22);
+
+    /* canvas stays a deep field (glow legibility) but lifts and warms a touch */
+    --canvas-bg-0: #11405a;
+    --canvas-bg-1: #062638;
+    --star-rgb: 150, 200, 215;
+    --edge-rgb: 120, 180, 195;
+    --node-rgb: 170, 205, 225;
+    --accent-rgb: 10, 119, 127;
+  }
 }
 
 * { box-sizing: border-box; }
@@ -18,8 +65,9 @@ html, body {
   overflow: hidden;
   background: var(--bg-0);
   color: var(--ink);
-  font: 13px/1.45 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font: 13px/1.45 ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
 }
 
 #stage {
@@ -27,6 +75,7 @@ html, body {
   inset: 0;
   display: block;
   cursor: grab;
+  touch-action: none;
 }
 #stage:active { cursor: grabbing; }
 
@@ -36,43 +85,86 @@ html, body {
   border: 1px solid var(--panel-brd);
   border-radius: 14px;
   padding: 12px 14px;
-  backdrop-filter: blur(9px);
-  -webkit-backdrop-filter: blur(9px);
+  backdrop-filter: blur(11px);
+  -webkit-backdrop-filter: blur(11px);
   box-shadow: var(--shadow);
 }
 
+/* --- top bar ------------------------------------------------------------ */
 #topbar {
   position: fixed;
-  top: 16px;
+  top: 14px;
   left: 18px;
   right: 18px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
   pointer-events: none;
 }
 .brand {
   display: flex;
   align-items: center;
-  gap: 9px;
-  font-size: 16px;
-  letter-spacing: 0.3px;
-  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.6);
+  gap: 12px;
+  min-width: 0;
 }
-.brand b { font-weight: 700; color: var(--accent); }
-.brand .dot {
-  width: 11px;
-  height: 11px;
+.brandlogo { display: inline-flex; flex: 0 0 auto; }
+.brandlogo svg { height: 30px; width: auto; display: block; }
+/* dark (default): chair logo flips white */
+.brandlogo svg text, .brandlogo svg path { fill: #ffffff; }
+@media (prefers-color-scheme: light) {
+  .brandlogo svg text,
+  .brandlogo svg path[fill="#00008C"] { fill: #00008C; }
+  .brandlogo svg path[fill="#C00000"] { fill: #C00000; }
+}
+.brandname {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 15px;
+  letter-spacing: 0.3px;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.45);
+  white-space: nowrap;
+}
+.brandname b { font-weight: 700; color: var(--accent); }
+.dot {
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   background: var(--accent);
   box-shadow: 0 0 14px var(--accent), 0 0 28px var(--accent);
   animation: beat 1.6s ease-in-out infinite;
+  flex: 0 0 auto;
 }
 @keyframes beat {
   0%, 100% { transform: scale(1); opacity: 0.85; }
   18% { transform: scale(1.5); opacity: 1; }
   40% { transform: scale(1); opacity: 0.85; }
 }
+.topctl {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  pointer-events: auto;
+}
+.iconbtn {
+  display: none;            /* desktop: hidden; shown in the mobile media query */
+  align-items: center;
+  gap: 5px;
+  border: 1px solid var(--panel-brd);
+  background: var(--panel);
+  color: var(--ink-dim);
+  border-radius: 999px;
+  padding: 6px 11px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  cursor: pointer;
+  backdrop-filter: blur(11px);
+  -webkit-backdrop-filter: blur(11px);
+}
+.iconbtn.active { color: var(--ink); border-color: var(--accent-line); background: var(--accent-soft); }
 .clock {
   font-variant-numeric: tabular-nums;
   color: var(--ink-dim);
@@ -81,8 +173,9 @@ html, body {
 }
 .clock b { color: var(--ink); font-weight: 600; }
 
+/* --- legend ------------------------------------------------------------- */
 #legend {
-  top: 64px;
+  top: 60px;
   left: 18px;
   max-width: 210px;
 }
@@ -94,6 +187,7 @@ html, body {
   color: var(--ink-dim);
   font-weight: 600;
 }
+#legend h4:not(:first-child) { margin-top: 12px; }
 .legend-row {
   display: flex;
   align-items: center;
@@ -110,10 +204,11 @@ html, body {
 .legend-row .nm { flex: 1; text-transform: capitalize; }
 .legend-row .ct { color: var(--ink-dim); font-variant-numeric: tabular-nums; }
 
+/* --- sidebar (activity rail / mobile drawer) ---------------------------- */
 #sidebar {
-  top: 64px;
+  top: 60px;
   right: 18px;
-  bottom: 104px;
+  bottom: 108px;
   width: 304px;
   max-width: calc(100vw - 36px);
   display: flex;
@@ -121,6 +216,7 @@ html, body {
   gap: 10px;
   padding: 12px 12px 8px;
 }
+.drawer-handle { display: none; }
 #nowplaying {
   flex: 0 0 auto;
   min-height: 18px;
@@ -155,8 +251,8 @@ html, body {
 }
 .filters button.active {
   color: var(--ink);
-  border-color: var(--accent);
-  background: rgba(79, 209, 255, 0.12);
+  border-color: var(--accent-line);
+  background: var(--accent-soft);
 }
 #eventlist {
   flex: 1 1 auto;
@@ -164,11 +260,12 @@ html, body {
   margin: 0 -6px;
   padding: 0 6px;
   scrollbar-width: thin;
-  scrollbar-color: rgba(120, 150, 200, 0.4) transparent;
+  scrollbar-color: var(--accent-line) transparent;
+  -webkit-overflow-scrolling: touch;
 }
 #eventlist::-webkit-scrollbar { width: 7px; }
 #eventlist::-webkit-scrollbar-thumb {
-  background: rgba(120, 150, 200, 0.35);
+  background: var(--accent-line);
   border-radius: 4px;
 }
 .ev-row {
@@ -180,10 +277,10 @@ html, body {
   cursor: pointer;
   border: 1px solid transparent;
 }
-.ev-row:hover { background: rgba(120, 150, 200, 0.1); }
+.ev-row:hover { background: color-mix(in srgb, var(--ink-dim) 12%, transparent); }
 .ev-row.active {
-  background: rgba(79, 209, 255, 0.12);
-  border-color: rgba(79, 209, 255, 0.35);
+  background: var(--accent-soft);
+  border-color: var(--accent-line);
 }
 .ev-row .ev-dot {
   width: 8px;
@@ -222,7 +319,7 @@ html, body {
   letter-spacing: 1px;
   padding: 2px 8px;
   border-radius: 999px;
-  color: #05080f;
+  color: var(--chip-ink);
   font-weight: 700;
 }
 .np-title {
@@ -234,6 +331,7 @@ html, body {
 .np-meta { color: var(--ink-dim); font-size: 12px; }
 .np-meta b { color: var(--ink); font-weight: 600; }
 
+/* --- timeline ----------------------------------------------------------- */
 #timeline {
   position: fixed;
   left: 18px;
@@ -243,32 +341,34 @@ html, body {
   border: 1px solid var(--panel-brd);
   border-radius: 16px;
   padding: 12px 16px 14px;
-  backdrop-filter: blur(9px);
-  -webkit-backdrop-filter: blur(9px);
+  backdrop-filter: blur(11px);
+  -webkit-backdrop-filter: blur(11px);
   box-shadow: var(--shadow);
 }
 .controls {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   margin-bottom: 8px;
+  flex-wrap: wrap;
 }
 #playpause {
   width: 38px;
   height: 38px;
   border-radius: 50%;
   border: 1px solid var(--panel-brd);
-  background: rgba(79, 209, 255, 0.12);
+  background: var(--accent-soft);
   color: var(--accent);
   font-size: 15px;
   cursor: pointer;
   transition: background 0.15s ease, transform 0.1s ease;
   flex: 0 0 auto;
 }
-#playpause:hover { background: rgba(79, 209, 255, 0.22); }
+#playpause:hover { background: color-mix(in srgb, var(--accent) 22%, transparent); }
 #playpause:active { transform: scale(0.94); }
-.speeds { display: flex; gap: 6px; }
-.speeds button {
+.speeds, .ranges { display: flex; gap: 6px; }
+.ranges { margin-left: 4px; }
+.speeds button, .ranges button {
   border: 1px solid var(--line);
   background: transparent;
   color: var(--ink-dim);
@@ -277,7 +377,12 @@ html, body {
   cursor: pointer;
   font-variant-numeric: tabular-nums;
 }
-.speeds button.active { color: var(--ink); border-color: var(--accent); background: rgba(79, 209, 255, 0.12); }
+.speeds button.active, .ranges button.active {
+  color: var(--ink);
+  border-color: var(--accent-line);
+  background: var(--accent-soft);
+}
+.ranges button { font-weight: 600; }
 .controls .span {
   margin-left: auto;
   color: var(--ink-dim);
@@ -297,21 +402,21 @@ html, body {
   height: 4px;
   margin-top: 8px;
   border-radius: 4px;
-  background: rgba(120, 150, 200, 0.2);
+  background: color-mix(in srgb, var(--ink-dim) 28%, transparent);
   outline: none;
 }
 #scrub::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
   background: var(--accent);
   box-shadow: 0 0 10px var(--accent);
   cursor: pointer;
 }
 #scrub::-moz-range-thumb {
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   border: none;
   border-radius: 50%;
   background: var(--accent);
@@ -319,16 +424,19 @@ html, body {
   cursor: pointer;
 }
 
+/* --- tooltip / empty ---------------------------------------------------- */
 .tooltip {
   position: fixed;
   pointer-events: none;
-  background: rgba(8, 12, 24, 0.92);
+  background: var(--panel);
   border: 1px solid var(--panel-brd);
   border-radius: 9px;
   padding: 7px 10px;
   font-size: 12px;
   max-width: 260px;
   box-shadow: var(--shadow);
+  backdrop-filter: blur(11px);
+  -webkit-backdrop-filter: blur(11px);
   z-index: 10;
   transform: translate(-50%, calc(-100% - 12px));
 }
@@ -345,4 +453,86 @@ html, body {
   font-size: 15px;
   text-align: center;
   padding: 40px;
+}
+
+/* =========================================================================
+   Mobile — phones / narrow viewports. The three fixed panels would overlap,
+   so: the legend becomes a tap-to-show overlay, the activity rail becomes a
+   bottom drawer (collapsed to its header by default, tap the handle/button
+   to expand), and the timeline goes edge-to-edge and compact.
+   ========================================================================= */
+@media (max-width: 720px) {
+  #topbar {
+    top: max(10px, env(safe-area-inset-top));
+    left: 12px;
+    right: 12px;
+  }
+  .brandlogo svg { height: 24px; }
+  .brandname { display: none; }              /* keep the logo, drop the wordmark */
+  .clock { display: none; }
+  .iconbtn { display: inline-flex; }
+
+  /* legend: hidden until toggled, then a floating overlay */
+  #legend {
+    display: none;
+    top: 56px;
+    left: 12px;
+    right: 12px;
+    max-width: none;
+    z-index: 8;
+  }
+  body.legend-open #legend { display: block; }
+
+  /* sidebar → bottom drawer above the timeline */
+  #sidebar {
+    top: auto;
+    left: 12px;
+    right: 12px;
+    bottom: calc(150px + env(safe-area-inset-bottom));
+    width: auto;
+    max-width: none;
+    max-height: 48px;                        /* collapsed: header peek only */
+    overflow: hidden;
+    padding: 8px 12px;
+    transition: max-height 0.28s ease;
+    z-index: 7;
+  }
+  body.list-open #sidebar { max-height: 50vh; }
+  .drawer-handle {
+    display: block;
+    width: 40px;
+    height: 4px;
+    border-radius: 999px;
+    background: var(--ink-dim);
+    opacity: 0.5;
+    margin: 0 auto 2px;
+    flex: 0 0 auto;
+    cursor: pointer;
+  }
+  #sidebar #nowplaying.idle { min-height: 16px; opacity: 0.55; }
+  #sidebar #nowplaying.idle::before {
+    content: "activity — tap to expand";
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--ink-dim);
+  }
+
+  /* timeline: edge to edge, compact */
+  #timeline {
+    left: 8px;
+    right: 8px;
+    bottom: max(8px, env(safe-area-inset-bottom));
+    padding: 10px 12px 12px;
+    border-radius: 14px;
+  }
+  .controls { gap: 9px; row-gap: 8px; }
+  #playpause { width: 34px; height: 34px; }
+  .speeds button, .ranges button { padding: 5px 10px; }   /* tap targets */
+  .controls .span { font-size: 11px; width: 100%; margin-left: 0; text-align: right; order: 9; }
+  #ecg { height: 54px; }
+}
+
+@media (max-width: 380px) {
+  .speeds { display: none; }                  /* keep ranges; speeds is secondary */
 }
