@@ -668,8 +668,8 @@
       });
       speedsEl.appendChild(b);
     });
-    // trailing-window presets — "last week" is the headline one
-    [{ d: 7, l: "7d" }, { d: 30, l: "30d" }, { d: null, l: "all" }].forEach(function (r) {
+    // trailing-window presets — "last week" is the default view, "last month" the opt-in
+    [{ d: 7, l: "7d" }, { d: 30, l: "30d" }].forEach(function (r) {
       var b = document.createElement("button");
       b.textContent = r.l;
       b.addEventListener("click", function () { applyRange(r.d); });
@@ -710,7 +710,7 @@
     updateSpanLabel();
     rangeButtons.forEach(function (rb) { rb.btn.classList.toggle("active", rb.days === rangeDays); });
   }
-  applyRange(null);
+  applyRange(7); // default view: last week (30d is one tap away)
 
   playBtn.addEventListener("click", function () {
     playing = !playing;
