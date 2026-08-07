@@ -183,6 +183,12 @@ See [`CONTRIBUTING.md`](CONTRIBUTING.md). Bug reports and feature ideas have
 issue templates. CI runs ruff, ruff-format, `mypy --strict` and pytest on
 Python 3.11–3.13.
 
+## AI disclaimer
+
+This repository was developed with substantial assistance from AI coding tools
+(primarily Anthropic's Claude). Code, documentation and results have been
+reviewed by the author, who takes full responsibility for the content.
+
 ## License
 
 Apache 2.0. See [`LICENSE`](LICENSE).
